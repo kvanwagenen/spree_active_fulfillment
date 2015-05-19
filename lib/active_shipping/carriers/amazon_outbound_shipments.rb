@@ -1,5 +1,5 @@
 module ActiveShipping
-	class AmazonMws < Carrier
+	class AmazonOutboundShipments < Carrier
 
 		# Asks the carrier for rate estimates for a given shipment.
 	    #
@@ -13,6 +13,7 @@ module ActiveShipping
 	    # @return [ActiveShipping::RateResponse] The response from the carrier, which
 	    #   includes 0 or more rate estimates for different shipping products
 	    def find_rates(origin, destination, packages, options = {})
+	    	@origin
 	      rate_response(origin, destination, packages, options)
 	    end
 
@@ -78,6 +79,18 @@ module ActiveShipping
 		private
 
 		def rate_response(origin, destination, packages, options)
+			preview = AmazonMws::FulfillmentPreview.new(origin, destination, packages, options)
+			RateResponse.new(
+				preview.success?, 
+				preview.message, 
+				Hash.from_xml(preview.response_xml),
+				rates: preview.rates,
+				xml: preview.response_xml,
+				request: preview.request_xml
+			)
+		end
+
+		def mws_response(origin, destination, packages, options)
 
 		end
 
