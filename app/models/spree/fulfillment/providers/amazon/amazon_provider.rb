@@ -1,6 +1,6 @@
 module Spree
-  module Fulfillment::Providers
-    class Amazon < Spree::Fulfillment::Provider
+  module Fulfillment::Providers::Amazon
+    class AmazonProvider < Spree::Fulfillment::Provider
 
       def initialize
         @fulfillment_preview_cache = FulFillmentPreviewCache.new
@@ -14,7 +14,7 @@ module Spree
         fulfillment_preview(package, service).cost
       end
 
-      def estimate_delivery_date(package, ship_date, service)
+      def estimate_delivery_date(package, service, ship_date)
         fulfillment_preview(package, service).delivery_date_estimate
       end
 

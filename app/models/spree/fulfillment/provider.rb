@@ -10,7 +10,7 @@ module Spree
         raise NotImplementedError, "#package_estimate is not supported by #{self.class.name}."
       end
 
-      def estimate_delivery_date(package, ship_date, service)
+      def estimate_delivery_date(package, service, ship_date)
         raise NotImplementedError, "#estimate_delivery_date is not supported by #{self.class.name}."
       end
 
