@@ -30,8 +30,8 @@ require 'spree/testing_support/controller_requests'
 require 'spree/testing_support/factories'
 require 'spree/testing_support/url_helpers'
 
-# Requires factories defined in lib/spree_active_fulfillment/factories.rb
-require 'spree_active_fulfillment/factories'
+# Requires factories defined in lib/spree_fulfillment/factories.rb
+require 'spree_fulfillment/factories'
 # require 'spree_shipping_service_levels/factories'
 Dir[File.join(File.dirname(__FILE__), 'factories/**/*.rb')].each { |f| require f }
 

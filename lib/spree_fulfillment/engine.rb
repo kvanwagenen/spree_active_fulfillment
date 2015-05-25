@@ -1,12 +1,16 @@
-module SpreeActiveFulfillment
+module SpreeFulfillment
   class Engine < Rails::Engine
     require 'spree/core'
     isolate_namespace Spree
-    engine_name 'spree_active_fulfillment'
+    engine_name 'spree_fulfillment'
 
     # use rspec for tests
     config.generators do |g|
       g.test_framework :rspec
+    end
+
+    initializer 'spree_fulfillment.configuration', :before => :load_config_initializers do
+      app.config.spree.fulfillment = Spree::Fulfillment::Configuration.new
     end
 
     def self.activate

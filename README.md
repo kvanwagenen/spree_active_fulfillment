@@ -1,4 +1,4 @@
-SpreeActiveFulfillment
+SpreeFulfillment
 ======================
 
 Introduction goes here.
@@ -6,17 +6,17 @@ Introduction goes here.
 Installation
 ------------
 
-Add spree_active_fulfillment to your Gemfile:
+Add spree_fulfillment to your Gemfile:
 
 ```ruby
-gem 'spree_active_fulfillment'
+gem 'spree_fulfillment'
 ```
 
 Bundle your dependencies and run the installation generator:
 
 ```shell
 bundle
-bundle exec rails g spree_active_fulfillment:install
+bundle exec rails g spree_fulfillment:install
 ```
 
 Testing
@@ -33,7 +33,7 @@ When testing your applications integration with this extension you may use it's 
 Simply add this require statement to your spec_helper:
 
 ```ruby
-require 'spree_active_fulfillment/factories'
+require 'spree_fulfillment/factories'
 ```
 
 Copyright (c) 2015 [name of extension creator], released under the New BSD License
