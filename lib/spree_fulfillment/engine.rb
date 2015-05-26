@@ -9,8 +9,8 @@ module SpreeFulfillment
       g.test_framework :rspec
     end
 
-    initializer 'spree_fulfillment.configuration', :before => :load_config_initializers do
-      app.config.spree.fulfillment = Spree::Fulfillment::Configuration.new
+    initializer 'spree_fulfillment.init_configuration', :before => :load_config_initializers do
+      Spree::Fulfillment::Config = Spree::Fulfillment::Configuration.new
     end
 
     def self.activate
