@@ -7,10 +7,7 @@ module Spree
       preference :aws_secret_access_key, :string
 
       def amazon_provider
-        if !@amazon_provider
-          @amazon_provider = Providers::Amazon::AmazonProvider.new
-        end
-        @amazon_provider
+        @amazon_provider ||= Providers::Amazon::AmazonProvider.new
       end
     end
   end

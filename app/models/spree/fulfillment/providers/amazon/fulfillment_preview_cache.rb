@@ -7,10 +7,7 @@ module Spree::Fulfillment::Providers::Amazon
 
     def get(package, service)
       key = preview_key(package, service)
-      if !previews[key]
-        previews[key] = FulfillmentPreviewRequest.new(package, service).preview
-      end
-      previews[key]
+      previews[key] ||= FulfillmentPreviewRequest.new(package, service).preview
     end
 
     private

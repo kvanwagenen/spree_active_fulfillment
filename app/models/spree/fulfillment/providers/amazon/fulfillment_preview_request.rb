@@ -19,10 +19,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def client
-      if !@client
-        @client = ::MWS::FulfillmentOutboundShipment::Client.new(aws_merchant_credentials)
-      end
-      @client
+      @client ||= ::MWS::FulfillmentOutboundShipment::Client.new(aws_merchant_credentials)
     end
 
     def address
