@@ -14,10 +14,10 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def estimate_cost(package, service)
-      fulfillment_preview(package, service).cost
+      fulfillment_preview(package, service).total_cost
     end
 
-    def estimate_delivery_date(package, service, ship_date)
+    def estimate_delivery_date(package, service)
       fulfillment_preview(package, service).delivery_date_estimate
     end
 

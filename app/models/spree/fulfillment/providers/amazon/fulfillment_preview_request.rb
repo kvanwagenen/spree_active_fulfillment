@@ -40,7 +40,7 @@ module Spree::Fulfillment::Providers::Amazon
       package.sku_counts.map do |sku_count|
         {
           'Quantity' => sku_count.count,
-          'SellerSKU' => sku_count.sku,
+          'SellerSKU' => "fba.#{sku_count.sku}",
           'SellerFulfillmentOrderItemId' => "#{package.order.id}:#{sku_count.sku}"
         }
       end

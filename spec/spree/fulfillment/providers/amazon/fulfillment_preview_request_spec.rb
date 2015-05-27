@@ -3,6 +3,9 @@ require 'spec_helper'
 describe Spree::Fulfillment::Providers::Amazon::FulfillmentPreviewRequest do
 	let(:package){ build(:stock_package_fulfilled) }
 	let(:request){ build(:standard_fulfillment_preview_request) }
+	let(:example_response) do
+		IO.read(File.join(SpecRoot::PATH,"fixtures","fulfillment_preview_request_response_example.xml"))
+	end
 
 	before :each do
 		klass = Spree::Fulfillment::Providers::Amazon::FulfillmentPreviewRequest
@@ -31,6 +34,7 @@ describe Spree::Fulfillment::Providers::Amazon::FulfillmentPreviewRequest do
 
 	context '#preview' do
 		it 'returns an instance of FulfillmentPreview' do
+			allow(request).to receive(:response_xml).and_return(example_response)
 			expect(request.preview).to be_instance_of(Spree::Fulfillment::Providers::Amazon::FulfillmentPreview)
 		end
 	end

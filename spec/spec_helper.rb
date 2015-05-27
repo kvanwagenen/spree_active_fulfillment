@@ -30,6 +30,10 @@ require 'spree/testing_support/controller_requests'
 require 'spree/testing_support/factories'
 require 'spree/testing_support/url_helpers'
 
+module SpecRoot
+  PATH = File.dirname(__FILE__)
+end
+
 # Requires factories defined in lib/spree_fulfillment/factories.rb
 require 'spree_fulfillment/factories'
 # require 'spree_shipping_service_levels/factories'
