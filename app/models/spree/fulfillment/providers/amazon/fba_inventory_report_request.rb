@@ -10,10 +10,10 @@ module Spree::Fulfillment::Providers::Amazon
     attr_accessor :request_start
 
     def parsed_response
-      request_start = Time.now
+      @request_start = Time.now
       while report_status != '_DONE_'
         if elapsed > request_timeout
-          raise ReportTimeoutException 'Processing of "_GET_AFN_INVENTORY_DATA_" report failed to complete in under 20 minutes!'
+          raise ReportTimeoutError.new 'Processing of "_GET_AFN_INVENTORY_DATA_" report failed to complete in under 20 minutes!'
         end
         sleep(5)
       end
@@ -59,5 +59,5 @@ module Spree::Fulfillment::Providers::Amazon
 
   end
 
-  class ReportTimeoutException < Exception; end
+  class ReportTimeoutError < StandardError; end
 end

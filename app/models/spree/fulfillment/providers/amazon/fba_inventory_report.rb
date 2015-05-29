@@ -13,9 +13,12 @@ module Spree::Fulfillment::Providers::Amazon
 
     attr_reader :csv
 
+    def sellable_rows
+      csv.select{|row|row['Warehouse-Condition-code'] == 'SELLABLE'}
+    end
+
     def built_sku_levels
-      csv.each do |row|
-        next if row['Warehouse-Condition-code'] != 'SELLABLE'
+      sellable_rows.map do |row|
         sku_level(row)
       end
     end

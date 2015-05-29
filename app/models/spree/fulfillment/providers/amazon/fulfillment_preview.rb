@@ -29,18 +29,6 @@ module Spree::Fulfillment::Providers::Amazon
       @hash ||= xml_to_hash
     end
 
-    # Returns a hash with the form:
-    # { :standard => {
-    #     :total => 1230,
-    #     :earliest_arrival_date => <Some DateTime>,
-    #     :latest_arrival_date => <Some DateTime>,
-    #     :fulfillable => true
-    #   },
-    #   :expedited => {
-    #     ...
-    #   }, ...
-    # }
-    #
     def xml_to_hash
       hash = {}
       members = xml.css("FulfillmentPreviews > member")

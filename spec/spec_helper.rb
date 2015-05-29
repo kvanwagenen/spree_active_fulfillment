@@ -43,6 +43,12 @@ module FixtureMethods
   def load_fixture(name)
     IO.read(File.join(SpecRoot::PATH,"fixtures",name))
   end
+  def load_xml_fixture(name)
+    Nokogiri::XML(load_fixture(name))
+  end
+  def load_tab_delimited_fixture(name)
+    CSV.parse(load_fixture(name), col_sep: "\t", quote_char: "\x00", headers: true)
+  end
 end
 
 RSpec.configure do |config|
