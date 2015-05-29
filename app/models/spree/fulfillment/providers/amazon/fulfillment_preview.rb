@@ -1,8 +1,8 @@
 module Spree::Fulfillment::Providers::Amazon
   class FulfillmentPreview
 
-    def initialize(xml_parser)
-      @xml = xml_parser
+    def initialize(parsed_xml)
+      @xml = parsed_xml
     end
 
     def total_cost(service)
@@ -17,6 +17,10 @@ module Spree::Fulfillment::Providers::Amazon
       )
     end
 
+    def fulfillable?(service)
+      hash[service][:fulfillable]
+    end
+
     private
 
     attr_reader :hash, :xml
@@ -29,7 +33,8 @@ module Spree::Fulfillment::Providers::Amazon
     # { :standard => {
     #     :total => 1230,
     #     :earliest_arrival_date => <Some DateTime>,
-    #     :latest_arrival_date => <Some DateTime>
+    #     :latest_arrival_date => <Some DateTime>,
+    #     :fulfillable => true
     #   },
     #   :expedited => {
     #     ...
@@ -48,6 +53,8 @@ module Spree::Fulfillment::Providers::Amazon
         hash[speed][:earliest_arrival_date] = earliest_arrival_dates.min
         latest_arrival_dates = dates_from_nodes(preview.css("LatestArrivalDate"))
         hash[speed][:latest_arrival_date] = latest_arrival_dates.max
+        fulfillable = preview.css("IsFulfillable").text.downcase == "true"
+        hash[speed][:fulfillable] = fulfillable
       end
       hash
     end

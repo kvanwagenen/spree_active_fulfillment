@@ -69,7 +69,7 @@
             </member>
           </EstimatedFees>
           <UnfulfillablePreviewItems/>
-          <IsFulfillable>true</IsFulfillable>
+          <IsFulfillable>false</IsFulfillable>
           <IsCODCapable>false</IsCODCapable>
         </member>
         <member>

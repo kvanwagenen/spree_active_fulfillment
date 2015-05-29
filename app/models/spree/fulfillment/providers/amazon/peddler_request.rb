@@ -12,6 +12,15 @@ module Spree::Fulfillment::Providers::Amazon
       }
     end
 
+    def client(parser=Nokogiri::XML)
+      client_class.parser = parser
+      @client ||= client_class.new(aws_merchant_credentials)
+    end
+
+    def client_class
+      raise NotImplementedError "#client_class has not been implemented on this request!"
+    end
+
     private
 
     def config

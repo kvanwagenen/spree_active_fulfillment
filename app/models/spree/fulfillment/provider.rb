@@ -26,6 +26,10 @@ module Spree
         raise NotImplementedError, "#cancel_fulfillment is not yet supported by #{self.class.name}."
       end
 
+      def update_inventory_levels(variants=nil)
+        raise NotImplementedError, "#update_inventory_levels is not yet supported by #{self.class.name}."
+      end
+
     end
   end
 end

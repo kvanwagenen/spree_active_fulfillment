@@ -8,6 +8,13 @@ describe Spree::Fulfillment::Providers::Amazon::FulfillmentPreview do
     klass.send(:public, *klass.private_instance_methods)
   end
 
+  context "#fulfillable?" do
+    it 'should return a correct value based on the response' do
+      expect(preview.fulfillable?(:standard)).to eq(true)
+      expect(preview.fulfillable?(:expedited)).to eq(false)
+    end
+  end
+
   context "#total_cost" do
     it 'should return the cost for the given service' do
       expect(preview.total_cost(:standard)).to eq(1675)

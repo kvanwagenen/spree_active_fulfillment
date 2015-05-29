@@ -7,10 +7,6 @@ module Spree::Calculator::Shipping::Amazon
       provider.estimate_cost(package, service, DateTime.now)
     end
 
-    def compute_shipment(shipment)
-
-    end
-
     def available?(package)
       provider.can_fulfill?(package)
     end
