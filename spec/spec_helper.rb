@@ -39,8 +39,15 @@ require 'spree_fulfillment/factories'
 # require 'spree_shipping_service_levels/factories'
 Dir[File.join(File.dirname(__FILE__), 'factories/**/*.rb')].each { |f| require f }
 
+module FixtureMethods
+  def load_fixture(name)
+    IO.read(File.join(SpecRoot::PATH,"fixtures",name))
+  end
+end
+
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
+  config.include FixtureMethods
 
   # Infer an example group's spec type from the file location.
   config.infer_spec_type_from_file_location!
