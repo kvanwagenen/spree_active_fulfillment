@@ -13,6 +13,17 @@ module SpreeFulfillment
       Spree::Fulfillment::Config = Spree::Fulfillment::Configuration.new
     end
 
+    initializer 'spree_fulfillment.register_shipping_calculators' do
+      if app.config.spree.calculators.shipping_methods
+        classes = Dir.chdir File.join(File.dirname(__FILE__), "../../app/models") do
+          Dir["spree/calculator/**/*.rb"].reject {|path| path =~ /base.rb$/ }.map do |path|
+            path.gsub('.rb', '').camelize.constantize
+          end
+        end
+        app.config.spree.calculators.shipping_methods.concat classes
+      end
+    end
+
     def self.activate
       Dir.glob(File.join(File.dirname(__FILE__), '../../app/**/*_decorator*.rb')) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
