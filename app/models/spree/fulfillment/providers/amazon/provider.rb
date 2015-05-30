@@ -62,7 +62,7 @@ module Spree::Fulfillment::Providers::Amazon
       if variants
         FulfillmentInventorySupplyRequest.new(variants).report
       else
-        FbaInventoryReportRequest.new.report
+        FbaInventoryReportRequest.new(load_most_recent: fulfillment_config.preferred_load_most_recent_reports).report
       end
     end
 

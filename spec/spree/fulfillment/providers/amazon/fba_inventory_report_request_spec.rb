@@ -24,7 +24,7 @@ module Spree::Fulfillment::Providers::Amazon
       client
     end
     let(:request) do
-      request = FbaInventoryReportRequest.new
+      request = FbaInventoryReportRequest.new(load_most_recent: false)
       allow(request).to receive(:client).and_return(client)
       request
     end
@@ -55,6 +55,11 @@ module Spree::Fulfillment::Providers::Amazon
     context '#report_id' do
       it 'correctly parses the report id from the get report list response' do
         expect(request.report_id).to eq("898899473")
+      end
+
+      it 'correctly retrieves the report id of the most recent report' do
+        allow(request).to receive(:load_most_recent).and_return(true)
+        expect(request.report_id).to eq("898899474")
       end
     end
 

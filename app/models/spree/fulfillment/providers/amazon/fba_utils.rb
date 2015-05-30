@@ -10,5 +10,9 @@ module Spree::Fulfillment::Providers::Amazon
       "FBA.#{sku}"
     end
 
+    def parse_amazon_date(date_string)
+      DateTime.strptime(date_string, "%Y-%m-%dT%H:%M:%SZ")
+    end
+
   end
 end

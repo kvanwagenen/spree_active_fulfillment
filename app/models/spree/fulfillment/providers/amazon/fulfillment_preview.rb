@@ -48,12 +48,10 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def dates_from_nodes(nodes)
-      nodes.map{|n| parse_amazon_date(n.text)}
+      nodes.map{|n| FbaUtils.parse_amazon_date(n.text)}
     end
 
-    def parse_amazon_date(date_string)
-      DateTime.strptime(date_string, "%Y-%m-%dT%H:%M:%SZ")
-    end
+    
 
   end
 end

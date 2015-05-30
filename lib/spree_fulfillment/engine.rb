@@ -13,7 +13,7 @@ module SpreeFulfillment
       Spree::Fulfillment::Config = Spree::Fulfillment::Configuration.new
     end
 
-    initializer 'spree_fulfillment.register_shipping_calculators' do
+    initializer 'spree_fulfillment.register_shipping_calculators' do |app|
       if app.config.spree.calculators.shipping_methods
         classes = Dir.chdir File.join(File.dirname(__FILE__), "../../app/models") do
           Dir["spree/calculator/**/*.rb"].reject {|path| path =~ /base.rb$/ }.map do |path|
