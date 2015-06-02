@@ -1,13 +1,18 @@
 module Spree::Fulfillment::Providers::Amazon
-  class NokogiriParser
+  class FlexibleParser
     def initialize(res, encoding)
-      @xml = Nokogiri::XML(res.body)
+      return res unless res.body
+      if res.headers['Content-Type'].start_with?('text/xml')
+        @parser = Nokogiri::XML(res.body)
+      else
+        @parser = CSV.parse(res.body, col_sep: "\t", quote_char: "\x00", headers: true)
+      end
     end
 
     private
 
     def method_missing(method, *args, &block)
-      @xml.send(method, *args, &block)
+      @parser.send(method, *args, &block)
     end
   end
 
@@ -24,9 +29,11 @@ module Spree::Fulfillment::Providers::Amazon
       }
     end
 
-    def client(parser=NokogiriParser)
-      client_class.parser = parser
-      @client ||= client_class.new(aws_merchant_credentials)
+    def client
+      @client ||= begin
+        client_class.parser = FlexibleParser
+        client_class.new(aws_merchant_credentials)
+      end
     end
 
     def client_class
