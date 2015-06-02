@@ -40,6 +40,10 @@ module Spree::Fulfillment::Providers::Amazon
       raise NotImplementedError "#client_class has not been implemented on this request!"
     end
 
+    def logger
+      Rails.logger
+    end
+
     private
 
     def config

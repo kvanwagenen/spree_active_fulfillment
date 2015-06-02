@@ -33,6 +33,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def report_status
+      logger.info "Requesting report request list to determine status..."
       response = client.get_report_request_list(report_request_id_list: report_request_id)
       generated_report_id_node = response.css("GeneratedReportId")
       @report_id = generated_report_id_node.text if generated_report_id_node.respond_to?(:text) && generated_report_id_node.text.length > 0
@@ -44,6 +45,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def request_report
+      logger.info "Requesting new _GET_AFN_INVENTORY_DATA_ report..."
       response = client.request_report('_GET_AFN_INVENTORY_DATA_')
       response.css("ReportRequestId").text
     end
@@ -60,6 +62,7 @@ module Spree::Fulfillment::Providers::Amazon
       if load_most_recent && most_recent_report_id
         most_recent_report_id
       else
+        logger.info "Requesting report for request id..."
         response = client.get_report_list(report_request_id_list: report_request_id)
         response.css("ReportInfo ReportId").first.text
       end
@@ -71,6 +74,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def completed_reports
+      logger.info "Requesting list of completed reports..."
       recent_report_list.css("ReportInfo").map do |report|
         {
           report_id: report.css("ReportId").text, 
