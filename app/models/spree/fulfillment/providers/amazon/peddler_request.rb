@@ -1,4 +1,16 @@
 module Spree::Fulfillment::Providers::Amazon
+  class NokogiriParser
+    def initialize(res, encoding)
+      @xml = Nokogiri::XML(res.body)
+    end
+
+    private
+
+    def method_missing(method, *args, &block)
+      @xml.send(method, *args, &block)
+    end
+  end
+
   class PeddlerRequest
 
     protected
@@ -12,7 +24,7 @@ module Spree::Fulfillment::Providers::Amazon
       }
     end
 
-    def client(parser=Nokogiri::XML)
+    def client(parser=NokogiriParser)
       client_class.parser = parser
       @client ||= client_class.new(aws_merchant_credentials)
     end
