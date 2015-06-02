@@ -14,14 +14,21 @@ module Spree::Fulfillment::Providers::Amazon
     attr_reader :request_start, :load_most_recent
 
     def parsed_response
-      @request_start = Time.now
-      while report_status != '_DONE_'
-        if elapsed > request_timeout
-          raise ReportTimeoutError.new 'Processing of "_GET_AFN_INVENTORY_DATA_" report failed to complete in under 20 minutes!'
+      if !load_most_recent
+        @request_start = Time.now
+        while report_status != '_DONE_'
+          if elapsed > request_timeout
+            raise ReportTimeoutError.new 'Processing of "_GET_AFN_INVENTORY_DATA_" report failed to complete in under 20 minutes!'
+          end
+          sleep(5)
         end
-        sleep(5)
       end
-      client(::Peddler::Parser).get_report(report_id)
+      get_report
+    end
+
+    def get_report
+      logger.info "Requesting completed report..."
+      client.get_report(report_id)
     end
 
     def elapsed
@@ -55,10 +62,10 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def report_id
-      @report_id ||= get_report_id
+      @report_id ||= determine_report_id
     end
 
-    def get_report_id
+    def determine_report_id
       if load_most_recent && most_recent_report_id
         most_recent_report_id
       else
@@ -69,8 +76,11 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def most_recent_report_id
-      report = completed_reports.sort_by{|report| report[:available_date]}.last
-      @most_recent_report_id ||= report && report[:report_id] ? report[:report_id] : nil
+      @most_recent_report_id ||= begin
+        logger.info "Determining id of most recent report..."
+        report = completed_reports.sort_by{|report| report[:available_date]}.last
+        report && report[:report_id] ? report[:report_id] : nil
+      end
     end
 
     def completed_reports
@@ -86,7 +96,8 @@ module Spree::Fulfillment::Providers::Amazon
     def recent_report_list
       client.get_report_list(
         report_type_list: '_GET_AFN_INVENTORY_DATA_', 
-        available_from_date: (DateTime.now - 7.days).iso8601
+        available_from_date: (DateTime.now - 7.days).iso8601,
+        acknowledged: true
       )
     end
 
