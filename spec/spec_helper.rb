@@ -29,6 +29,11 @@ require 'spree/testing_support/capybara_ext'
 require 'spree/testing_support/controller_requests'
 require 'spree/testing_support/factories'
 require 'spree/testing_support/url_helpers'
+require 'spree/testing_support/preferences'
+require 'spree/api/testing_support/caching'
+require 'spree/api/testing_support/helpers'
+require 'spree/api/testing_support/setup'
+require 'active_support/all'
 
 module SpecRoot
   PATH = File.dirname(__FILE__)
@@ -51,9 +56,24 @@ module FixtureMethods
   end
 end
 
+module RoutesSetup
+  extend ActiveSupport::Concern
+  included do
+    routes { Spree::Core::Engine.routes }
+  end
+end
+
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include FixtureMethods
+  config.include Spree::Api::TestingSupport::Helpers, :type => :controller
+  config.extend Spree::Api::TestingSupport::Setup, :type => :controller
+  config.include Spree::TestingSupport::Preferences, :type => :controller
+  config.include RoutesSetup, type: :controller
+
+  config.before do
+    Spree::Api::Config[:requires_authentication] = true
+  end
 
   # Infer an example group's spec type from the file location.
   config.infer_spec_type_from_file_location!
