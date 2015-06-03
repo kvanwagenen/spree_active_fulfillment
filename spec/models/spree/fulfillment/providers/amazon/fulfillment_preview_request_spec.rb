@@ -20,6 +20,7 @@ describe Spree::Fulfillment::Providers::Amazon::FulfillmentPreviewRequest do
 			expect(address['Name']).not_to be_nil
 			expect(address['Line1']).not_to be_nil
 			expect(address['City']).not_to be_nil
+			expect(address['CountryCode']).to eq('US')
 		end
 	end
 
