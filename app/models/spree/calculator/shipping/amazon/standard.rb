@@ -3,7 +3,7 @@ require_dependency 'spree/calculator'
 module Spree::Calculator::Shipping::Amazon
   class Standard < Base
 
-    def description
+    def self.description
       "Amazon FBA Standard"
     end
 

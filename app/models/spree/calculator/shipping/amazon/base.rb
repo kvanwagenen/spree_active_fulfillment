@@ -4,7 +4,7 @@ module Spree::Calculator::Shipping::Amazon
 	class Base < Spree::ShippingCalculator
 		
     def compute_package(package)
-      provider.estimate_cost(package, service, DateTime.now)
+      provider.estimate_cost(package, service)
     end
 
     def available?(package)
@@ -13,7 +13,7 @@ module Spree::Calculator::Shipping::Amazon
 
     protected
 
-    def description
+    def self.description
       raise NotImplementedError, "Please implement 'description' in your calculator: #{self.class.name}"
     end
 
