@@ -35,7 +35,7 @@ module Spree::Fulfillment::Providers::Amazon
       members.each do |preview|
         speed = preview.css("ShippingSpeedCategory").text.downcase.to_sym
         hash[speed] = {}
-        total = preview.css("EstimatedFees Value").inject(0){|m,n| m += n.text.to_i}
+        total = preview.css("EstimatedFees Value").inject(0.0){|m,n| m += n.text.to_f}
         hash[speed][:total] = total
         earliest_arrival_dates = dates_from_nodes(preview.css("EarliestArrivalDate"))
         hash[speed][:earliest_arrival_date] = earliest_arrival_dates.min

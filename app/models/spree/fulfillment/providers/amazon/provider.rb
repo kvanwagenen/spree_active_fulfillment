@@ -10,15 +10,15 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def can_fulfill?(package)
-      fulfillment_preview(package, :standard).fulfillable?
+      fulfillment_preview(package, :standard).fulfillable?(:standard)
     end
 
     def estimate_cost(package, service)
-      fulfillment_preview(package, service).total_cost
+      fulfillment_preview(package, service).total_cost(service)
     end
 
     def estimate_delivery_date(package, service)
-      fulfillment_preview(package, service).delivery_date_estimate
+      fulfillment_preview(package, service).delivery_date_estimate(service)
     end
 
     def update_inventory_levels(variants=nil)

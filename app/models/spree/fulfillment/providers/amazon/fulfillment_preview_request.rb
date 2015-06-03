@@ -31,8 +31,8 @@ module Spree::Fulfillment::Providers::Amazon
         'Line1' => ship_address.address1,
         'Line2' => ship_address.address2,
         'City' => ship_address.city,
-        'StateOrProvinceCode' => ship_address.state.to_s,
-        'CountryCode' => ship_address.state.country.iso,
+        'StateOrProvinceCode' => ship_address.state.abbr,
+        'CountryCode' => ship_address.country.iso_name,
         'PostalCode' => ship_address.zipcode,
         'PhoneNumber' => ship_address.phone
       }
