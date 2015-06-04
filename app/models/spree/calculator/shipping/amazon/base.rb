@@ -11,15 +11,19 @@ module Spree::Calculator::Shipping::Amazon
       provider.can_fulfill?(package)
     end
 
-    protected
-
-    def self.description
-      raise NotImplementedError, "Please implement 'description' in your calculator: #{self.class.name}"
+    def fulfillment_provider
+      provider
     end
 
     def service
       raise NotImplementedError, "Please implement 'service' in your calculator: #{self.class.name}"
     end
+
+    protected
+
+    def self.description
+      raise NotImplementedError, "Please implement 'description' in your calculator: #{self.class.name}"
+    end    
 
     private
 

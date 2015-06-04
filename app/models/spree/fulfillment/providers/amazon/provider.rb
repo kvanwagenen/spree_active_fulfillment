@@ -10,7 +10,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def can_fulfill?(package)
-      fulfillment_preview(package, :standard).fulfillable?(:standard)
+      can_fulfill = fulfillment_preview(package, :standard).fulfillable?(:standard)
     end
 
     def estimate_cost(package, service)
@@ -27,8 +27,11 @@ module Spree::Fulfillment::Providers::Amazon
       end
     end
 
-    def fulfill(shipment)
-      raise NotImplementedError, "#fulfill is not yet supported by #{self.class.name}."
+    def fulfill(shipment, service=nil)
+      service ||= shipment.shipping_method.calculator.service
+      fulfillment_order_id = CreateFulfillmentOrderRequest.fulfillment_order_id(shipment, service)
+      fulfillment_order = GetFulfillmentOrderRequest.fulfillment_order(fulfillment_order_id)
+      shipment.fulfillments.create(fulfillment_order.fulfillment)
     end
 
     def cancel_fulfillment(fulfillment)

@@ -25,28 +25,18 @@ module Spree::Fulfillment::Providers::Amazon
     end    
 
     def address
-      ship_address = package.order.ship_address
-      {
-        'Name' => ship_address.full_name,
-        'Line1' => ship_address.address1,
-        'Line2' => ship_address.address2,
-        'City' => ship_address.city,
-        'StateOrProvinceCode' => ship_address.state.abbr,
-        'CountryCode' => ship_address.country.iso_name,
-        'PostalCode' => ship_address.zipcode,
-        'PhoneNumber' => ship_address.phone
-      }
+      FbaUtils.amazon_address(package.order.ship_address)     
     end
 
     def items
       package.sku_counts.map do |sku_count|
         {
-          'Quantity' => sku_count.count,
-          'SellerSKU' => FbaUtils.seller_sku(sku_count.sku),
-          'SellerFulfillmentOrderItemId' => "#{package.order.id}:#{sku_count.sku}"
+          'Quantity' => sku_count[:count],
+          'SellerSKU' => FbaUtils.seller_sku(sku_count[:sku]),
+          'SellerFulfillmentOrderItemId' => "#{package.order.id}:#{sku_count[:sku]}"
         }
       end
-    end
+    end    
 
   end
 end

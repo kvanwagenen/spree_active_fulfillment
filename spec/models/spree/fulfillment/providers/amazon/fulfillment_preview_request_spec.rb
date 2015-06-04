@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Spree::Fulfillment::Providers::Amazon::FulfillmentPreviewRequest do
 	let(:package){ build(:stock_package_fulfilled) }
 	let(:request){ build(:standard_fulfillment_preview_request) }
+
 	let(:example_response) do
 		xml = IO.read(File.join(SpecRoot::PATH,"fixtures","fulfillment_preview_request_response_example.xml"))
 		Nokogiri::XML(xml)
@@ -22,6 +23,16 @@ describe Spree::Fulfillment::Providers::Amazon::FulfillmentPreviewRequest do
 			expect(address['City']).not_to be_nil
 			expect(address['CountryCode']).to eq('US')
 		end
+
+		context 'with a 9 digit zip' do
+			let(:request){ build(:fulfillment_preview_request_with_9_digit_zip) }
+
+			it 'passes only the first 5 digits of the postal code' do
+				address = request.address
+				expect(address['PostalCode'].length).to eq(5)
+			end
+		end
+		
 	end
 
 	context '#items' do

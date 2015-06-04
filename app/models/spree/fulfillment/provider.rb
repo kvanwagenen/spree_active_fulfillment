@@ -1,5 +1,5 @@
 module Spree
-  module Fulfillment
+  class Fulfillment
     class Provider
 
       def services
@@ -18,7 +18,7 @@ module Spree
         raise NotImplementedError, "#estimate_delivery_date is not supported by #{self.class.name}."
       end
 
-      def fulfill(shipment)
+      def fulfill(shipment, service=nil)
         raise NotImplementedError, "#fulfill is not supported by #{self.class.name}."
       end      
 
