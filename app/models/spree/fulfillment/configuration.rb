@@ -8,7 +8,7 @@ module Spree
     preference :load_most_recent_reports, :boolean, default: false
 
     def amazon_provider
-      @amazon_provider ||= Providers::Amazon::Provider.new
+      @amazon_provider ||= ::Spree::Fulfillment::Providers::Amazon::Provider.new
     end
   end
 end
