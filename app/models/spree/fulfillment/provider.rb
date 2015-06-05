@@ -20,7 +20,15 @@ module Spree
 
       def fulfill(shipment, service=nil)
         raise NotImplementedError, "#fulfill is not supported by #{self.class.name}."
+      end
+
+      def refresh_fulfillment(fulfillment)
+        raise NotImplementedError, "#refresh_fulfillment is not yet supported by #{self.class.name}."
       end      
+
+      def update_fulfillment(fulfillment)
+        raise NotImplementedError, "#update_fulfillment is not yet supported by #{self.class.name}."
+      end
 
       def cancel_fulfillment(fulfillment)
         raise NotImplementedError, "#cancel_fulfillment is not yet supported by #{self.class.name}."
