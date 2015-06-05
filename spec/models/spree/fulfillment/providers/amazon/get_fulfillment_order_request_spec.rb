@@ -14,7 +14,14 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     context "#fulfillment_order" do
-      it 'should return an instance of FulfillmentOrder'
+      it 'should call get_fulfillment_order on the mws client' do
+        request.fulfillment_order
+        expect(client).to have_received(:get_fulfillment_order)
+      end
+
+      it 'should return an instance of FulfillmentOrder' do
+        expect(request.fulfillment_order).to be_instance_of(FulfillmentOrder)
+      end
     end
   end
 end

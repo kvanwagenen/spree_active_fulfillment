@@ -2,6 +2,7 @@ class CreateSpreeFulfillments < ActiveRecord::Migration
   def change
     create_table :spree_fulfillments do |t|
       t.belongs_to :shipment, index: true, foreign_key: true
+      t.string :type
       t.string :status
       t.string :fulfiller_id
       t.string :service

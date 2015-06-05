@@ -11,6 +11,10 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def parse_amazon_date(date_string)
+      date_string.length > 0 ? parse_date(date_string) : nil      
+    end
+
+    def parse_date(date_string)
       begin
         DateTime.strptime(date_string, "%Y-%m-%dT%H:%M:%S%z")
       rescue ArgumentError

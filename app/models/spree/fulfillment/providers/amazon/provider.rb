@@ -28,10 +28,15 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def fulfill(shipment, service=nil)
-      service ||= shipment.shipping_method.calculator.service
-      fulfillment_order_id = CreateFulfillmentOrderRequest.fulfillment_order_id(shipment, service)
-      fulfillment_order = GetFulfillmentOrderRequest.fulfillment_order(fulfillment_order_id)
-      shipment.fulfillments.create(fulfillment_order.fulfillment)
+      service ||= shipment_service(shipment)
+      fulfillment_order_id = CreateFulfillmentOrderRequest.new(shipment, service).fulfillment_order_id
+      fulfillment_order = GetFulfillmentOrderRequest.new(fulfillment_order_id).fulfillment_order
+      shipment.fulfillments << fulfillment_order.fulfillment
+    end
+
+    def refresh_fulfillment(fulfillment)
+      fulfillment_order = GetFulfillmentOrderRequest.new(fulfillment.fulfiller_id).fulfillment_order
+      fulfillment_order.update_fulfillment(fulfillment)
     end
 
     def cancel_fulfillment(fulfillment)
@@ -41,6 +46,10 @@ module Spree::Fulfillment::Providers::Amazon
     private
 
     attr_accessor :fulfillment_preview_cache
+
+    def shipment_service(shipment)
+      shipment.shipping_method.calculator.service
+    end
 
     def fulfillment_preview(package, service)
       preview = fulfillment_preview_cache.get(package, service)

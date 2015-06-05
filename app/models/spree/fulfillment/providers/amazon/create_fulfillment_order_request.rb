@@ -22,16 +22,21 @@ module Spree::Fulfillment::Providers::Amazon
     attr_reader :shipment, :service
 
     def create_fulfillment_order
-      client.create_fulfillment_order(
-        seller_fulfillment_order_id,
-        displayable_order_id,
-        displayable_order_date_time,
-        displayable_order_comment,
-        shipping_speed_category,
-        destination_address,
-        items,
-        options
-      )
+      begin
+        client.create_fulfillment_order(
+          seller_fulfillment_order_id,
+          displayable_order_id,
+          displayable_order_date_time,
+          displayable_order_comment,
+          shipping_speed_category,
+          destination_address,
+          items,
+          options
+        )
+      rescue Excon::Errors::BadRequest => e
+        logger.error "CreateFulfillmentOrderRequest failed! Response:\n#{e.response.body}"
+        raise PeddlerError "Peddler request failed!"
+      end
     end
 
     def seller_fulfillment_order_id
@@ -43,11 +48,11 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def displayable_order_date_time
-      shipment.order.completed_at || Time.now
+      (shipment.order.completed_at || DateTime.now).iso8601
     end
 
     def displayable_order_comment
-      ""
+      "Thank you for your order!"
     end
 
     def shipping_speed_category
@@ -64,7 +69,7 @@ module Spree::Fulfillment::Providers::Amazon
 
     def create_fulfillment_order_item(sku_count)
       {
-        'SellerSKU' => sku_count[:sku],
+        'SellerSKU' => FbaUtils.seller_sku(sku_count[:sku]),
         'SellerFulfillmentOrderItemId' => "#{shipment.number}:#{sku_count[:sku]}:Q#{sku_count[:count]}",
         'Quantity' => sku_count[:count]
       }

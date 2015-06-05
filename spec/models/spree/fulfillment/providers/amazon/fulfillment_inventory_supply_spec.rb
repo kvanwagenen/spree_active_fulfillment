@@ -4,7 +4,7 @@ module Spree::Fulfillment::Providers::Amazon
   describe FulfillmentInventorySupply do
       
     let(:supply) do
-      xml = load_xml_fixture(File.join("reports", "fulfillment_inventory_supply_list_response.xml"))
+      xml = load_xml_fixture(File.join("fulfillment_inventory_supply_list_response.xml"))
       supply = FulfillmentInventorySupply.new(xml)
       supply
     end

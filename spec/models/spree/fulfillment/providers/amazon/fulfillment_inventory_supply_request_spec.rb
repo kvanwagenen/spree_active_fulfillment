@@ -5,7 +5,7 @@ module Spree::Fulfillment::Providers::Amazon
 
     let(:client) do
       client = double("client")
-      response = load_xml_fixture(File.join("reports", "fulfillment_inventory_supply_list_response.xml"))
+      response = load_xml_fixture(File.join("fulfillment_inventory_supply_list_response.xml"))
       allow(client).to receive(:list_inventory_supply).and_return(response)
       client
     end

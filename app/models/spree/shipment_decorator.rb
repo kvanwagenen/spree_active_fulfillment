@@ -9,6 +9,12 @@ Spree::Shipment.class_eval do
     shipping_method.calculator.service
   end
 
+  def refresh_fulfillments(not_refreshed_for=0)
+    fulfillments_to_refresh(not_refreshed_for).each do |fulfillment|
+      fulfillment_provider.refresh_fulfillment(fulfillment)
+    end
+  end
+
   alias_method :orig_finalize!, :finalize!
   def finalize!
     orig_finalize!
@@ -25,6 +31,12 @@ Spree::Shipment.class_eval do
         count: units.length
       }
     end
+  end
+
+  private
+
+  def fulfillments_to_refresh(not_refreshed_for)
+    fulfillments.where("spree_fulfillments.updated_at < ?", DateTime.now - not_refreshed_for)
   end
 
 end

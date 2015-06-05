@@ -51,4 +51,6 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
   end
+
+  class PeddlerError < StandardError; end
 end
