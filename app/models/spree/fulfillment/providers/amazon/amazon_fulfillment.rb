@@ -38,8 +38,13 @@ module Spree::Fulfillment::Providers::Amazon
 
     def processing
       if fulfillment_data[:shipments].select{ |shipment| shipment[:status] != "shipped"}.empty?
+        capture_payments
         ship_shipment
       end
+    end
+
+    def capture_payments
+      shipment.order.payments.each(&:capture!)
     end
 
     def ship_shipment
@@ -48,6 +53,7 @@ module Spree::Fulfillment::Providers::Amazon
         shipment.ship
         if tracking_number
           shipment.tracking = tracking_number
+          shipment.save
         end
       end
     end
@@ -67,6 +73,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def complete
+      capture_payments
       ship_shipment
     end    
 
