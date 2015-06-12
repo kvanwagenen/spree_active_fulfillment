@@ -9,12 +9,6 @@ module Spree::Fulfillment::Providers::Amazon
       super(new_status)
     end
 
-    def cancel
-      if cancellable?
-        provider.cancel_fulfillment(self)
-      end
-    end
-
     def refresh
       provider.refresh_fulfillment(self)
     end

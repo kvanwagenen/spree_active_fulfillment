@@ -20,6 +20,10 @@ module Spree::Fulfillment::Providers::Amazon
 
     protected
 
+    def client_class
+      raise NotImplementedError "#client_class has not been implemented on this request!"
+    end
+
     def aws_merchant_credentials
       {
         marketplace_id: config.preferred_mws_marketplace_id,
@@ -32,12 +36,8 @@ module Spree::Fulfillment::Providers::Amazon
     def client
       @client ||= begin
         client_class.parser = FlexibleParser
-        client_class.new(aws_merchant_credentials)
+        PeddlerClientWrapper.new(client_class.new(aws_merchant_credentials))
       end
-    end
-
-    def client_class
-      raise NotImplementedError "#client_class has not been implemented on this request!"
     end
 
     def logger
@@ -50,6 +50,29 @@ module Spree::Fulfillment::Providers::Amazon
       Spree::Fulfillment::Config
     end
 
+  end
+
+  class PeddlerClientWrapper
+    def initialize(client)
+      @client = client
+    end
+
+    private
+
+    attr_reader :client
+
+    def method_missing(method, *args, &block)
+      begin
+        client.send(method, *args, &block)
+      rescue Excon::Errors::HTTPStatusError => e
+        logger.error "#{self.class.name} failed! Error: #{e.to_s}\nRequest:\n#{e.request.body}\n\nResponse:\n#{e.response.body}"
+        raise PeddlerError.new "Peddler request failed!"
+      end
+    end
+
+    def logger
+      Rails.logger
+    end
   end
 
   class PeddlerError < StandardError; end
