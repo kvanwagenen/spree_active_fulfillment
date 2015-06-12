@@ -17,8 +17,8 @@ module Spree::Fulfillment::Providers::Amazon
       fulfillment_preview(package, service).total_cost(service)
     end
 
-    def estimate_delivery_date(package, service)
-      fulfillment_preview(package, service).delivery_date_estimate(service)
+    def estimate_delivery_window(package, service, ship_date)
+      fulfillment_preview(package, service).delivery_window_estimate(service)
     end
 
     def update_inventory_levels(variants=nil)

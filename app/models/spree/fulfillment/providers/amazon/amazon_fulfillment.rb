@@ -37,13 +37,27 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def processing
-      ship_shipment
+      if fulfillment_data[:shipments].select{ |shipment| shipment[:status] != "shipped"}.empty?
+        ship_shipment
+      end
     end
 
     def ship_shipment
-      if(shipment.state != "shipped")
+      if(shipment && shipment.state != "shipped")
+        shipment.ready
         shipment.ship
+        if tracking_number
+          shipment.tracking = tracking_number
+        end
       end
+    end
+
+    def tracking_number
+      @tracking_number ||= packages.map{|package| package[:tracking_number]}.compact[0]
+    end
+
+    def packages
+      fulfillment_data[:shipments].map{|shipment| shipment[:packages]}.flatten.compact
     end
 
     def cannot_fulfill

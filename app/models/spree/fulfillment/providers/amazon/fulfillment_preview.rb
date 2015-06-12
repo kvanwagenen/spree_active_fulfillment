@@ -9,9 +9,9 @@ module Spree::Fulfillment::Providers::Amazon
       hash[service][:total]
     end
 
-    DeliveryDateEstimate = Struct.new(:earliest, :latest)
-    def delivery_date_estimate(service)
-      DeliveryDateEstimate.new(
+    DeliveryWindowEstimate = Struct.new(:start, :end)
+    def delivery_window_estimate(service)
+      DeliveryWindowEstimate.new(
         hash[service][:earliest_arrival_date],
         hash[service][:latest_arrival_date]
       )
