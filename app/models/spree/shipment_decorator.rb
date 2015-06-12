@@ -23,6 +23,12 @@ Spree::Shipment.class_eval do
     end
   end
 
+  alias_method :orig_after_cancel, :after_cancel
+  def after_cancel
+    orig_after_cancel
+    fulfillments.each(&:cancel)
+  end
+
   def sku_counts
     sku_units = inventory_units.group_by{|i|i.variant.sku}
     sku_units.map do |sku, units|
