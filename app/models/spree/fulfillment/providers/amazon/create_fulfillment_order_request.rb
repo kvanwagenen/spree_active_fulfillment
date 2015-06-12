@@ -22,21 +22,16 @@ module Spree::Fulfillment::Providers::Amazon
     attr_reader :shipment, :service
 
     def create_fulfillment_order
-      begin
-        client.create_fulfillment_order(
-          seller_fulfillment_order_id,
-          displayable_order_id,
-          displayable_order_date_time,
-          displayable_order_comment,
-          shipping_speed_category,
-          destination_address,
-          items,
-          options
-        )
-      rescue Excon::Errors::BadRequest => e
-        logger.error "CreateFulfillmentOrderRequest failed! Response:\n#{e.response.body}"
-        raise PeddlerError "Peddler request failed!"
-      end
+      client.create_fulfillment_order(
+        seller_fulfillment_order_id,
+        displayable_order_id,
+        displayable_order_date_time,
+        displayable_order_comment,
+        shipping_speed_category,
+        destination_address,
+        items,
+        options
+      )
     end
 
     def seller_fulfillment_order_id
