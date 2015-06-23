@@ -9,12 +9,11 @@ module Spree::Fulfillment::Providers::Amazon
       hash[service][:total]
     end
 
-    DeliveryWindowEstimate = Struct.new(:start, :end)
     def delivery_window_estimate(service)
-      DeliveryWindowEstimate.new(
+      [
         hash[service][:earliest_arrival_date],
         hash[service][:latest_arrival_date]
-      )
+      ]
     end
 
     def fulfillable?(service)
