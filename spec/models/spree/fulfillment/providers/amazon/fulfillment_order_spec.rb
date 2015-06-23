@@ -34,8 +34,29 @@ module Spree::Fulfillment::Providers::Amazon
           expect(fulfillment.earliest_arrival_time).to be_nil
         end
       end
-      
+    end
 
+    context '#cancelled?' do
+      context 'with cancelled quantity elements greater than 0' do
+        let(:parsed_response){load_xml_fixture("get_fulfillment_order_response_cancelled_example.xml")}
+        it 'returns true' do
+          expect(fulfillment_order.cancelled?).to eq(true)
+        end
+      end
+
+      context 'with no CancelledQuantity elements' do
+        let(:parsed_response){load_xml_fixture("get_fulfillment_order_response_none_cancelled_example.xml")}
+        it 'returns false' do
+          expect(fulfillment_order.cancelled?).to eq(false)
+        end
+      end
+
+      context 'with sum of cancelled quantity elements 0' do
+        let(:parsed_response){load_xml_fixture("get_fulfillment_order_response_example.xml")}
+        it 'returns false' do
+          expect(fulfillment_order.cancelled?).to eq(false)
+        end
+      end
     end
   end
 end

@@ -40,7 +40,11 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def cancel_fulfillment(fulfillment)
-      raise NotImplementedError, "#cancel_fulfillment is not yet supported by #{self.class.name}."
+      CancelFulfillmentOrderRequest.new(fulfillment).execute
+      fulfillment_order = GetFulfillmentOrderRequest.new(fulfillment.fulfiller_id).fulfillment_order
+      if !fulfillment_order.cancelled?
+        raise FulfillmentCancellationError.new "Failed to cancel fulfillment with id #{fulfillment.id} and seller id #{fulfillment.fulfiller_id}"
+      end
     end
 
     private
@@ -79,4 +83,6 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
   end
+
+  class FulfillmentCancellationError < StandardError; end
 end
