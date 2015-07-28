@@ -11,7 +11,7 @@
         </EstimatedShipDateTime>
         <DisplayableComment>Example comment</DisplayableComment>
         <UnfulfillableQuantity>0</UnfulfillableQuantity>
-        <CancelledQuantity>0</CancelledQuantity>
+        <CancelledQuantity>1</CancelledQuantity>
         <Quantity>5</Quantity>
         <EstimatedArrivalDateTime>2014-01-05T08:07:53Z
         </EstimatedArrivalDateTime>
@@ -34,7 +34,7 @@
         <DisplayableComment>Example comment
         </DisplayableComment>
         <UnfulfillableQuantity>2</UnfulfillableQuantity>
-        <CancelledQuantity>0</CancelledQuantity>
+        <CancelledQuantity>1</CancelledQuantity>
         <Quantity>5</Quantity>
         <EstimatedArrivalDateTime>2014-01-05T08:07:53Z
         </EstimatedArrivalDateTime>
