@@ -50,9 +50,11 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def ship_shipment
-      if(shipment && shipment.state != "shipped")
-        shipment.ready
-        shipment.ship
+      if shipment
+        if shipment.state != "shipped"
+          shipment.ready
+          shipment.ship
+        end
         if tracking_number
           shipment.tracking = tracking_number
           shipment.save
