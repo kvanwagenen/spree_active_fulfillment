@@ -50,8 +50,5 @@ module Spree::Fulfillment::Providers::Amazon
     def dates_from_nodes(nodes)
       nodes.map{|n| FbaUtils.parse_amazon_date(n.text)}
     end
-
-    
-
   end
 end
