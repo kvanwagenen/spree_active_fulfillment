@@ -17,11 +17,13 @@ module Spree::Fulfillment::Providers::Amazon
       ["received", "planning"].include?(status)
     end
 
-    private
+    protected
 
     def provider
       Spree::Fulfillment::Config.amazon_provider
     end
+
+    private
 
     def handle_status_change(final_status, initial_status)
       case final_status
