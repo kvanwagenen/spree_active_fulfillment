@@ -24,8 +24,8 @@ describe Spree::Fulfillment::Providers::Amazon::FulfillmentPreview do
 
   context "#delivery_date_estimate" do
     it 'should return valid delivery date estimates for the given service' do
-      expect(preview.delivery_date_estimate(:expedited).earliest).to eq(DateTime.new(2014,1,5,7,0,0))
-      expect(preview.delivery_date_estimate(:expedited).latest).to eq(DateTime.new(2014,1,6,6,59,59))
+      expect(preview.delivery_window_estimate(:expedited).start).to eq(DateTime.new(2014,1,5,7,0,0))
+      expect(preview.delivery_window_estimate(:expedited).end).to eq(DateTime.new(2014,1,6,6,59,59))
     end
   end
 
