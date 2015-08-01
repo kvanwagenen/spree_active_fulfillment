@@ -23,6 +23,14 @@ module Spree::Calculator::Shipping::Amazon
       raise NotImplementedError, "Please implement 'service' in your calculator: #{self.class.name}"
     end
 
+    def rate_daily_expiration_hour
+      if respond_to?(:preferred_rate_daily_expiration_hour) && preferred_rate_daily_expiration_hour
+        preferred_rate_daily_expiration_hour
+      else
+        11
+      end
+    end
+
     protected
 
     def self.description
