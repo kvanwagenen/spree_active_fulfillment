@@ -19,6 +19,74 @@ bundle
 bundle exec rails g spree_fulfillment:install
 ```
 
+Configuration
+-------------
+
+### Create a new stock location for Amazon in the admin interface 
+
+1. Set the address to an amazon fulfillment center of your choice.
+2. *Only check "propogate all variants" if you have or plan to offer all of your variants from amazon. It may take some time to propogate.*
+3. Save the stock location
+4. Create stock items for your amazon stock location for variants you would like to have fulfilled
+
+### Configure the extension
+
+Start a rails console session
+
+```shell
+bundle exec rails c
+```
+
+Set Amazon stock location id
+
+```ruby
+Spree::Fulfillment::Config[:amazon_stock_location_id] = (your amazon stock location id)
+```
+
+Set whether or not you want to check for existing inventory reports before generating new ones
+
+```ruby
+Spree::Fulfillment::Config[:load_most_recent_reports] = (true/false)
+```
+
+Set your Amazon MWS credentials
+
+```ruby
+Spree::Fulfillment::Config[:mws_marketplace_id] = (your marketplace id)
+Spree::Fulfillment::Config[:mws_merchant_id] = (your merchant id)
+Spree::Fulfillment::Config[:aws_access_key_id] = (your aws access key id)
+Spree::Fulfillment::Config[:aws_secret_access_key] = (your aws secret access key)
+```
+
+### Sync Inventory with Amazon
+
+```shell
+bundle exec rake spree_fulfillment:sync_inventory_levels
+```
+
+
+### Create Cron Jobs
+
+#### Job to sync inventory
+
+Your job should use this rake command:
+
+```shell
+bundle exec rake spree_fulfillment:sync_inventory_levels
+```
+
+
+#### Job to refresh the status of fulfillments
+
+Your job should use this rake command:
+
+```shell
+bundle exec rake spree_fulfillment:refresh_fulfillments
+```
+
+We recommend you schedule the task for every 10 minutes or so depending on your order volume.
+
+
 Testing
 -------
 
