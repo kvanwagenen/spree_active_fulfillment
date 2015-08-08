@@ -65,6 +65,7 @@ module Spree::Fulfillment::Providers::Amazon
       begin
         client.send(method, *args, &block)
       rescue Excon::Errors::HTTPStatusError => e
+        logger.error e
         logger.error "#{self.class.name} failed! Error: #{e.to_s}\nRequest:\n#{e.request.body}\n\nResponse:\n#{e.response.body}"
         raise PeddlerError.new "Peddler request failed!"
       end
