@@ -4,7 +4,7 @@ module Spree::Calculator::Shipping::Amazon
 	class Base < Spree::ShippingCalculator
 		
     def compute_package(package)
-      provider.estimate_cost(package, service)
+      adjusted_cost(package)
     end
 
     def estimate_delivery_window(package, ship_date)
@@ -41,6 +41,22 @@ module Spree::Calculator::Shipping::Amazon
 
     def provider
       Spree::FulfillmentConfig.amazon_provider
+    end
+
+    def adjusted_cost(package)
+      provider_cost(package) - variant_fulfillment_subsidy_total(package)
+    end
+
+    def provider_cost(package)
+      provider.estimate_cost(package, service)
+    end
+
+    def variant_fulfillment_subsidy_total(package)
+      if Spree::Variant.new.respond_to?(:fulfillment_cost)
+        package.contents.map{|content_item|content_item.inventory_unit.variant}.sum(&:fulfillment_cost)
+      else
+        0
+      end
     end
 
 	end
