@@ -60,7 +60,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def fulfillment_config
-      Spree::Fulfillment::Config
+      Spree::FulfillmentConfig
     end
 
     def update_sku_on_hand(sku_level)

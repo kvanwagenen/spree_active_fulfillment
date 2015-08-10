@@ -40,22 +40,22 @@ bundle exec rails c
 Set Amazon stock location id
 
 ```ruby
-Spree::Fulfillment::Config[:amazon_stock_location_id] = (your amazon stock location id)
+Spree::FulfillmentConfig[:amazon_stock_location_id] = (your amazon stock location id)
 ```
 
 Set whether or not you want to check for existing inventory reports before generating new ones
 
 ```ruby
-Spree::Fulfillment::Config[:load_most_recent_reports] = (true/false)
+Spree::FulfillmentConfig[:load_most_recent_reports] = (true/false)
 ```
 
 Set your Amazon MWS credentials
 
 ```ruby
-Spree::Fulfillment::Config[:mws_marketplace_id] = (your marketplace id)
-Spree::Fulfillment::Config[:mws_merchant_id] = (your merchant id)
-Spree::Fulfillment::Config[:aws_access_key_id] = (your aws access key id)
-Spree::Fulfillment::Config[:aws_secret_access_key] = (your aws secret access key)
+Spree::FulfillmentConfig[:mws_marketplace_id] = (your marketplace id)
+Spree::FulfillmentConfig[:mws_merchant_id] = (your merchant id)
+Spree::FulfillmentConfig[:aws_access_key_id] = (your aws access key id)
+Spree::FulfillmentConfig[:aws_secret_access_key] = (your aws secret access key)
 ```
 
 ### Sync Inventory with Amazon

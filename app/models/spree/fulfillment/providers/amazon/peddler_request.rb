@@ -47,7 +47,7 @@ module Spree::Fulfillment::Providers::Amazon
     private
 
     def config
-      Spree::Fulfillment::Config
+      Spree::FulfillmentConfig
     end
 
   end

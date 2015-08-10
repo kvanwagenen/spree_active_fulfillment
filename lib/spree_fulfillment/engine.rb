@@ -10,7 +10,7 @@ module SpreeFulfillment
     end
 
     initializer 'spree_fulfillment.init_configuration', :before => :load_config_initializers do
-      Spree::Fulfillment::Config = Spree::Fulfillment::Configuration.new
+      Spree::FulfillmentConfig = Spree::Fulfillment::Configuration.new
     end
 
     initializer 'spree_fulfillment.register_shipping_calculators' do |app|

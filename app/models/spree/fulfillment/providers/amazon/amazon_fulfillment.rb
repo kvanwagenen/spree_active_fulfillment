@@ -19,8 +19,8 @@ module Spree::Fulfillment::Providers::Amazon
 
     protected
 
-    def provider
-      Spree::Fulfillment::Config.amazon_provider
+    def provider 
+      Spree::FulfillmentConfig.amazon_provider
     end
 
     private

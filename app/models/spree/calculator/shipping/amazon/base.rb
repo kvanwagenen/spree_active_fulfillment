@@ -40,7 +40,7 @@ module Spree::Calculator::Shipping::Amazon
     private
 
     def provider
-      Spree::Fulfillment::Config.amazon_provider
+      Spree::FulfillmentConfig.amazon_provider
     end
 
 	end

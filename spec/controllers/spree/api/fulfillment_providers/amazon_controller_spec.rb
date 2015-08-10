@@ -13,7 +13,7 @@ module Spree::Api::Fulfillment
 
     before do
       stub_authentication!
-      allow(Spree::Fulfillment::Config).to receive(:amazon_provider).and_return(amazon_provider)
+      allow(Spree::FulfillmentConfig).to receive(:amazon_provider).and_return(amazon_provider)
     end
 
     context "#update_inventory" do

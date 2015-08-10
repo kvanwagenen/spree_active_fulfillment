@@ -11,7 +11,7 @@ module Spree::Api
       private
 
       def amazon_provider
-        Spree::Fulfillment::Config.amazon_provider
+        Spree::FulfillmentConfig.amazon_provider
       end
 
       def variants_to_update
