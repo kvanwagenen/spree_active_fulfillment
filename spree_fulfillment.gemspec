@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.description = 'Adds third party fulfillment integration to Spree'
   s.required_ruby_version = '>= 2.0.0'
 
-  s.author    = 'Kyle Van Wagenen'
+  s.authors    = ['Kyle Van Wagenen']
   # s.email     = 'you@example.com'
   # s.homepage  = 'http://www.spreecommerce.com'
 
