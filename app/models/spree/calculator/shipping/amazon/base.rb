@@ -52,8 +52,10 @@ module Spree::Calculator::Shipping::Amazon
     end
 
     def variant_fulfillment_subsidy_total(package)
-      if Spree::Variant.new.respond_to?(:fulfillment_cost)
-        package.contents.map{|content_item|content_item.inventory_unit.variant}.sum(&:fulfillment_cost)
+      if Spree::Variant.new.respond_to?(:fulfillment_subsidy)
+        package.contents.map{|content_item|content_item.inventory_unit.variant}.inject(0) do |sum, variant|
+          variant.fulfillment_subsidy ? sum + variant.fulfillment_subsidy : sum
+        end
       else
         0
       end

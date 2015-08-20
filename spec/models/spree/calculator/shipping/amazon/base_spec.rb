@@ -13,17 +13,14 @@ describe Calculator::Shipping::Amazon::Base, type: :model do
   context '#compute_package' do
     context 'with fulfillment costs' do
       before(:each) do
-        Variant.class_eval do
-          def fulfillment_cost; end
-        end
         package.contents.map{|c|c.inventory_unit.variant}.each do |variant|
-          allow(variant).to receive(:fulfillment_cost).and_return(1 + rand(2))
+          allow(variant).to receive(:fulfillment_subsidy).and_return(1 + rand(2))
         end
       end
 
       it 'subtracts the sum of variant fulfillment costs from the value returned by the provider' do
-        fulfillment_sum = package.contents.map{|content_item|content_item.inventory_unit.variant}.sum(&:fulfillment_cost)
-        cost = cost_estimate - fulfillment_sum
+        fulfillment_subsidy = package.contents.map{|content_item|content_item.inventory_unit.variant}.sum(&:fulfillment_subsidy)
+        cost = cost_estimate - fulfillment_subsidy
         expect(calculator.compute_package(package)).to eq(cost)
       end
     end
