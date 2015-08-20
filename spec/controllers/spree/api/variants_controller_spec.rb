@@ -14,7 +14,6 @@ describe Api::VariantsController, type: :controller do
   end
   
   context 'as an admin' do
-    # sign_in_as_admin!
     let!(:current_api_user) do
       user = double(Spree.user_class)
       allow(user).to receive_message_chain(:spree_roles, :pluck).and_return(["admin"])
