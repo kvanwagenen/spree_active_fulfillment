@@ -39,7 +39,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def processing
-      if fulfillment_data[:shipments].select{ |shipment| shipment[:status] != "shipped"}.empty?
+      if fulfillment_data[:shipments].select{ |shipment| shipment[:status] == "shipped"}.any?
         capture_payments
         ship_shipment
       end
