@@ -44,7 +44,7 @@ module Spree::Calculator::Shipping::Amazon
     end
 
     def adjusted_cost(package)
-      provider_cost(package) - variant_fulfillment_subsidy_total(package)
+      [provider_cost(package) - variant_fulfillment_subsidy_total(package), 0].max
     end
 
     def provider_cost(package)

@@ -24,6 +24,20 @@ describe Calculator::Shipping::Amazon::Base, type: :model do
         expect(calculator.compute_package(package)).to eq(cost)
       end
     end
+    
+    context 'with lots of subsidies' do
+        
+      before(:each) do
+        package.contents.map{|c|c.inventory_unit.variant}.each do |variant|
+          allow(variant).to receive(:fulfillment_subsidy).and_return(10 + rand(2))
+        end
+      end
+    
+      it 'does not return a cost less than 0' do
+        expect(calculator.compute_package(package)).to be >= 0
+      end
+      
+    end
 
     context 'without fulfillment costs' do
       it 'returns the provider\'s cost estimate' do
