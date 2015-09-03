@@ -10,6 +10,10 @@ module Spree::Calculator::Shipping::Amazon
     def service
       :priority
     end
+    
+    def guaranteed?
+      true
+    end
 
   end
 end
