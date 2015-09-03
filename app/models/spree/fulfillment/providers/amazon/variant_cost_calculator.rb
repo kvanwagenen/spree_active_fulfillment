@@ -3,7 +3,7 @@ module Spree::Fulfillment::Providers::Amazon
     
     def fulfillment_cost(variant)
       dims = [variant.width, variant.height, variant.depth]
-      dims = dims.map{|d|d >= 0 ? d : 1}.sort
+      dims = dims.map{|d|(d && d >= 0) ? d : 1}.sort
       if dims[0] > 7.5 || dims[1] > 13.5 || dims[2] > 17.5 || (variant.weight / 16.0) > 19.5
         total_cost(:oversize)
       else
