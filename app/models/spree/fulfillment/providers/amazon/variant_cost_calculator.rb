@@ -5,9 +5,9 @@ module Spree::Fulfillment::Providers::Amazon
       dims = [variant.width, variant.height, variant.depth]
       dims = dims.map{|d|(d && d >= 0) ? d : 1}.sort
       if dims[0] > 7.5 || dims[1] > 13.5 || dims[2] > 17.5 || (variant.weight / 16.0) > 19.5
-        total_cost(:oversize)
+        total_cost(variant, :oversize)
       else
-        total_cost(:standard)
+        total_cost(variant, :standard)
       end
     end
     
@@ -26,8 +26,9 @@ module Spree::Fulfillment::Providers::Amazon
     
     mattr_reader :size_costs
     
-    def total_cost(size)
-      size_costs[size][:unit] + size_costs[size][:order]
+    def total_cost(variant, size)
+      subsidy = variant.fulfillment_subsidy || 0
+      [size_costs[size][:unit] + size_costs[size][:order] - subsidy, 0].max
     end
     
   end

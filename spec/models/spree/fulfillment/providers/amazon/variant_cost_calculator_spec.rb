@@ -6,10 +6,18 @@ describe Fulfillment::Providers::Amazon::VariantCostCalculator do
   let(:calculator){Fulfillment::Providers::Amazon::VariantCostCalculator.new}
   let(:oversize_cost){10}
   let(:cost){calculator.fulfillment_cost(variant)}
+  let(:variant){build(:variant, depth: 5, width: 5, height: 5, weight: 10)}
   context 'with standard sized variant' do
-    let(:variant){build(:variant, depth: 5, width: 5, height: 5, weight: 10)}
     it 'returns standard cost' do
-      expect(cost).to eq(5.50)  
+      expect(cost).to eq(5.50)
+    end
+  end
+  context 'with a variant with a fulfillment_subsidy' do
+    before do
+      allow(variant).to receive(:fulfillment_subsidy).and_return(0.75)
+    end
+    it 'substracts the subsidy from the cost' do
+      expect(cost).to eq(4.75)
     end
   end
   context 'with variant with longest side over 17 inches' do
