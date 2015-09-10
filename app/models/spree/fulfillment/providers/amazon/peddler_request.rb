@@ -64,9 +64,9 @@ module Spree::Fulfillment::Providers::Amazon
     def method_missing(method, *args, &block)
       begin
         client.send(method, *args, &block)
-      rescue Excon::Errors::HTTPStatusError => e
+      rescue Excon::Errors::Error => e
         logger.error e
-        logger.error "#{self.class.name} failed! Error: #{e.to_s}\nRequest:\n#{e.request.body}\n\nResponse:\n#{e.response.body}"
+        logger.error "#{self.class.name} failed! Error: #{e.to_s}\nRequest:\n#{e.request[:query].gsub('&',"\n")}\n\nResponse:\n#{e.response.body}"
         raise PeddlerError.new "Peddler request failed!"
       end
     end
