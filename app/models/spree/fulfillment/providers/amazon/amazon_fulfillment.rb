@@ -3,8 +3,8 @@ module Spree::Fulfillment::Providers::Amazon
     scope :refreshable, -> { where(status: ["received","planning","processing"]) }    
 
     def status=(new_status)
-      if status != new_status && !status.nil? 
-        handle_status_change(new_status, status)
+      if status && new_status && (status != new_status || new_status == "processing")
+        handle_status_change(new_status)
       end
       super(new_status)
     end
@@ -25,7 +25,7 @@ module Spree::Fulfillment::Providers::Amazon
 
     private
 
-    def handle_status_change(final_status, initial_status)
+    def handle_status_change(final_status)
       case final_status
       when "processing"
         processing
@@ -47,7 +47,7 @@ module Spree::Fulfillment::Providers::Amazon
 
     def capture_payments
       shipment.order.payments.each do |payment|
-        payment.capture! if !["invalid", "failed"].include?(payment.state)
+        payment.capture! if !["invalid", "failed", "completed"].include?(payment.state)
       end
     end
 
