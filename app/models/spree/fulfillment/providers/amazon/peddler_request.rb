@@ -66,7 +66,8 @@ module Spree::Fulfillment::Providers::Amazon
         client.send(method, *args, &block)
       rescue Excon::Errors::Error => e
         logger.error e
-        logger.error "#{self.class.name} failed! Error: #{e.to_s}\nRequest:\n#{e.request[:query].gsub('&',"\n")}\n\nResponse:\n#{e.response.body}"
+        request_params = e.request[:query] || e.request[:body] || ""
+        logger.error "#{self.class.name} failed! Error: #{e.to_s}\nRequest:\n#{request_params.gsub('&',"\n")}\n\nResponse:\n#{e.response.body}"
         raise PeddlerError.new "Peddler request failed!"
       end
     end
