@@ -6,6 +6,6 @@ Spree::Order.class_eval do
   end
   
   def fulfilled_shipments
-    shipments.select{|s|s.respond_to?(:fulfillment_provider)}
+    shipments.select{|s|s.fulfillment_provider}
   end
 end

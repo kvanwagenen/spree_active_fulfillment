@@ -49,6 +49,29 @@ describe Spree::Order, type: :model do
           expect(order.state).to eq("complete")
         end
       end
+      
+      context 'when the order has at least one fulfilled and one not fulfilled shipment' do
+        let(:fulfilled_shipment) do
+          shipment = create(:shipment)
+          allow(shipment).to receive(:fulfillment_provider).and_return(Spree::FulfillmentConfig.amazon_provider)
+          shipment
+        end
+        let(:not_fulfilled_shipment) do
+          shipment = create(:shipment)
+          allow(shipment).to receive(:fulfillment_provider).and_return(nil)
+          shipment
+        end
+        before do
+          order.shipments.delete_all
+          order.shipments << not_fulfilled_shipment
+          order.shipments << fulfilled_shipment
+        end
+        it 'should fulfill only the fulfilled shipment' do
+          expect(fulfilled_shipment).to receive(:fulfill!)
+          expect(not_fulfilled_shipment).not_to receive(:fulfill!)
+          expect{order.next}.not_to raise_error
+        end
+      end
     end
   end
 end
