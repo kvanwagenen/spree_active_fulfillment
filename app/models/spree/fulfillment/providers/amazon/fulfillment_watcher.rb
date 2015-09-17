@@ -5,7 +5,12 @@ module Spree::Fulfillment::Providers::Amazon
       logger.info "Begin refreshing Amazon fulfillments..."
       start = Time.now
       fulfillments_needing_refresh.each do |fulfillment|
-        fulfillment.refresh
+        begin
+          fulfillment.refresh
+        rescue Exception => e
+          logger.error("RefreshFulfillment Error! Order:#{fulfillment.shipment.order.number} Shipment:#{fulfillment.shipment.number}")
+          logger.error("#{e}\n#{e.backtrace}")
+        end
         sleep(0.5)
       end
       logger.info "Refreshed #{fulfillments_needing_refresh.length} fulfillments in #{Time.now - start} seconds"
