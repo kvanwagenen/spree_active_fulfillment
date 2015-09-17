@@ -2,4 +2,8 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  spree:
+    insufficient_inventory_exists_to_fulfill_your_order: Insufficient inventory exists on hand to complete your order!
+    only_standard_shipping_available_to_destination: Only standard shipping service is available to your chosen shipping address! Change your address or continue with standard shipping.
+    fulfillment_error: An error has occured attempting to create your order. Please contact customer support. 
+    

@@ -14,22 +14,10 @@ Spree::Shipment.class_eval do
       fulfillment_provider.refresh_fulfillment(fulfillment)
     end
   end
-
-  alias_method :orig_finalize!, :finalize!
-  def finalize!
-    orig_finalize!
-    if fulfillment_provider && !order.is_risky?
-      fulfillment_provider.fulfill(self, fulfillment_service)
-    end
+  
+  def fulfill!
+    fulfillment_provider.fulfill(self, fulfillment_service)
   end
-
-  # alias_method :orig_after_ship, :after_ship
-  # def after_ship
-  #   orig_after_ship
-  #   if fulfillment_provider
-  #     fulfillment_provider.fulfill(self, fulfillment_service)
-  #   end
-  # end
 
   alias_method :orig_after_cancel, :after_cancel
   def after_cancel

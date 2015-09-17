@@ -1,0 +1,8 @@
+<ErrorResponse xmlns="http://mws.amazonaws.com/FulfillmentOutboundShipment/2010-10-01/">
+  <Error>
+    <Type>Sender</Type>
+    <Code>InvalidRequestException</Code>
+    <Message>No inventory available for Items.SellerFulfillmentOrderItemId: H17803477741:4039943:Q15.</Message>
+  </Error>
+  <RequestId>81832a13-2eb7-4a16-ae7b-eed5d7ba3f44</RequestId>
+</ErrorResponse>

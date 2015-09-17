@@ -69,6 +69,7 @@ RSpec.configure do |config|
   config.include Spree::Api::TestingSupport::Helpers, :type => :controller
   config.extend Spree::Api::TestingSupport::Setup, :type => :controller
   config.include Spree::TestingSupport::Preferences, :type => :controller
+  config.include Spree::TestingSupport::ControllerRequests, type: :controller
   config.include RoutesSetup, type: :controller
 
   config.before do

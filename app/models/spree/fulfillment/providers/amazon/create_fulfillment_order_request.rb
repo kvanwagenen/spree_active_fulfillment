@@ -1,4 +1,8 @@
 module Spree::Fulfillment::Providers::Amazon
+  class FulfillmentError < StandardError; end
+  class OnlyStandardServiceAvailableForDestination < FulfillmentError; end
+  class InventoryNotAvailable < FulfillmentError; end
+  
   class CreateFulfillmentOrderRequest < PeddlerRequest
    
     def initialize(shipment, service)
@@ -9,6 +13,19 @@ module Spree::Fulfillment::Providers::Amazon
     def fulfillment_order_id      
       create_fulfillment_order
       seller_fulfillment_order_id
+    end
+    
+    def handle_error(e)
+      if e.is_a?(Excon::Errors::BadRequest) && e.response && e.response.body 
+        if /Delivery SLA is not available for destination address/ =~ e.response.body
+          logger.warn("Fulfillment Warning: Invalid DeliverySLA. Order: #{@shipment.order.number}")
+          raise OnlyStandardServiceAvailableForDestination
+        elsif /No inventory available for Items/ =~ e.response.body
+          logger.warn("Fulfillment Warning: InventoryNotAvailable Order: #{@shipment.order.number}")
+          raise InventoryNotAvailable
+        end
+      end
+      false
     end
 
     protected

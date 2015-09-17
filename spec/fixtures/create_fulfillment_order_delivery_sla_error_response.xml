@@ -1,0 +1,8 @@
+<ErrorResponse xmlns="http://mws.amazonaws.com/FulfillmentOutboundShipment/2010-10-01/">
+  <Error>
+    <Type>Sender</Type>
+    <Code>InvalidRequestException</Code>
+    <Message>Value DeliverySLAUnavailable for parameter  is invalid. Reason: Delivery SLA is not available for destination address. .</Message>
+  </Error>
+  <RequestId>43f72f50-7744-4935-97cf-985d58b4535a</RequestId>
+</ErrorResponse>
