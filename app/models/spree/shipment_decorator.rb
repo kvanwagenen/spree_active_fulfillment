@@ -2,7 +2,7 @@ Spree::Shipment.class_eval do
   has_many :fulfillments
 
   def fulfillment_provider
-    shipping_method.calculator.respond_to?(:fulfillment_provider) ? shipping_method.calculator.fulfillment_provider : nil
+    (shipping_method && shipping_method.calculator && shipping_method.calculator.respond_to?(:fulfillment_provider)) ? shipping_method.calculator.fulfillment_provider : nil
   end
 
   def fulfillment_service
