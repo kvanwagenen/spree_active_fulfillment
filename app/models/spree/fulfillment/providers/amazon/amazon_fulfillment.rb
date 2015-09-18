@@ -3,7 +3,7 @@ module Spree::Fulfillment::Providers::Amazon
     scope :refreshable, -> { where(status: ["received","planning","processing"]) }    
 
     def status=(new_status)
-      if status && new_status && (status != new_status || new_status == "processing")
+      if new_status && (status != new_status || ["processing", "complete"].include?(new_status))
         handle_status_change(new_status)
       end
       super(new_status)
@@ -15,6 +15,17 @@ module Spree::Fulfillment::Providers::Amazon
 
     def cancellable?
       ["received", "planning"].include?(status)
+    end
+    
+    def tracking_numbers
+      @tracking_numbers ||= packages.map{|package| package[:tracking_number]}.compact.join(", ")
+    end
+    
+    def sync_tracking_numbers
+      if tracking_numbers
+        shipment.tracking = tracking_numbers
+        shipment.save
+      end
     end
 
     protected
@@ -53,19 +64,12 @@ module Spree::Fulfillment::Providers::Amazon
 
     def ship_shipment
       if shipment
+        sync_tracking_numbers
         if shipment.state != "shipped"
           shipment.ready
           shipment.ship
         end
-        if tracking_number
-          shipment.tracking = tracking_number
-          shipment.save
-        end
       end
-    end
-
-    def tracking_number
-      @tracking_number ||= packages.map{|package| package[:tracking_number]}.compact[0]
     end
 
     def packages
@@ -73,7 +77,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def cannot_fulfill
-      if shipment.order.state != "cancelled"
+      if !shipment.order.canceled?
         shipment.order.cancel
       end
     end
