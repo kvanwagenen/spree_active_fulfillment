@@ -8,7 +8,6 @@ describe Calculator::Shipping::Amazon::Base, type: :model do
   let(:provider){instance_double(Fulfillment::Providers::Amazon::Provider, estimate_cost: cost_estimate)}
   before(:each) do
     allow(calculator).to receive(:provider).and_return(provider)
-    
   end
   context '#compute_package' do
     context 'with fulfillment costs' do
@@ -42,6 +41,15 @@ describe Calculator::Shipping::Amazon::Base, type: :model do
     context 'without fulfillment costs' do
       it 'returns the provider\'s cost estimate' do
         expect(calculator.compute_package(package)).to eq(cost_estimate)
+      end
+    end
+    
+    context 'with a nil provider cost' do
+      before do
+        allow(provider).to receive(:estimate_cost).and_return(nil)
+      end
+      it 'returns nil' do
+        expect(calculator.compute_package(package)).to be_nil
       end
     end
   end
