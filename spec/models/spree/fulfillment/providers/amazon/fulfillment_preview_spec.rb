@@ -11,7 +11,7 @@ describe Spree::Fulfillment::Providers::Amazon::FulfillmentPreview do
   context "#fulfillable?" do
     it 'should return a correct value based on the response' do
       expect(preview.fulfillable?(:standard)).to eq(true)
-      expect(preview.fulfillable?(:expedited)).to eq(false)
+      expect(preview.fulfillable?(:priority)).to eq(false)
     end
   end
 
@@ -19,6 +19,11 @@ describe Spree::Fulfillment::Providers::Amazon::FulfillmentPreview do
     it 'should return the cost for the given service' do
       expect(preview.total_cost(:standard)).to eq(1675)
       expect(preview.total_cost(:expedited)).to eq(1360)
+    end
+    context 'with a service that is not fulfillable' do
+      it 'should return nil if the given service is not fulfillable' do
+        expect(preview.total_cost(:priority)).to be_nil
+      end
     end
   end
 

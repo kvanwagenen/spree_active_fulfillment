@@ -6,7 +6,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def total_cost(service)
-      hash[service][:total]
+      hash[service][:fulfillable] ? hash[service][:total] : nil
     end
 
     def delivery_window_estimate(service)
