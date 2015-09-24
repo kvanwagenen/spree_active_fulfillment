@@ -33,6 +33,8 @@ describe Spree::CheckoutController, type: :controller do
         before do
           allow(order).to receive(:fulfilled_shipments).and_raise(Spree::Fulfillment::Providers::Amazon::InventoryNotAvailable)
           allow(Spree::FulfillmentConfig.amazon_provider).to receive(:update_inventory_levels)
+          order.payments << create(:payment, state: "pending")
+          order.payments << create(:payment, state: "completed")
         end
         it 'requests an inventory update for each variant in the order' do
           variants = order.line_items.map(&:variant)
@@ -46,6 +48,18 @@ describe Spree::CheckoutController, type: :controller do
           response
           expect(flash[:error]).to eq(Spree.t(:insufficient_inventory_exists_to_fulfill_your_order))
         end
+        it 'calls refund_completed_payments' do
+          expect(controller).to receive(:refund_completed_payments)
+          response
+        end
+        it 'credits any completed payments' do
+          response
+          expect(order.payments.reload.completed.map(&:refunds).flatten.length).to eq(1)
+        end
+        it 'voids any pending payments' do
+          response
+          expect(order.payments.reload.pending.empty?).to be_truthy
+        end
       end
       
       context 'when an OnlyStandardServiceAvailableForDestination error is raised' do
@@ -53,6 +67,8 @@ describe Spree::CheckoutController, type: :controller do
           allow(Spree::FulfillmentConfig.amazon_provider).to receive(:fulfill).and_raise(Spree::Fulfillment::Providers::Amazon::OnlyStandardServiceAvailableForDestination)
           allow(order.shipments.first).to receive(:fulfillment_provider).and_return(Spree::FulfillmentConfig.amazon_provider)
           order.shipments.first.shipping_rates.first.shipping_method.calculator = Spree::Calculator::Shipping::Amazon::Priority.new
+          order.payments << create(:payment, state: "pending")
+          order.payments << create(:payment, state: "completed")
         end
         it 'removes the non-standard shipping rates from the shipment' do
           response
@@ -67,6 +83,10 @@ describe Spree::CheckoutController, type: :controller do
         it 'informs the customer with a flash message' do
           response
           expect(flash[:error]).to eq(Spree.t(:only_standard_shipping_available_to_destination))
+        end
+        it 'calls refund_completed_payments' do
+          expect(controller).to receive(:refund_completed_payments)
+          response
         end
       end
     end

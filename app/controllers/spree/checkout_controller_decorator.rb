@@ -17,5 +17,16 @@ Spree::CheckoutController.class_eval do
       flash[:error] = Spree.t(:fulfillment_error)
       redirect_to checkout_state_path(:confirm)
     end
+    refund_completed_payments
+  end
+  
+  def refund_completed_payments
+    refund_reason = Spree::RefundReason.find_or_create_by(name: "Failed Fulfillment")
+    @order.payments.completed.each do |payment|
+      payment.refunds.create(amount: payment.amount, refund_reason_id: refund_reason.id)
+    end
+    @order.payments.pending.each do |payment|
+      payment.try(:void_transaction!)
+    end
   end
 end
