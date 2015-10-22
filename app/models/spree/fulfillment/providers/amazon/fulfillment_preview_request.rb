@@ -21,8 +21,14 @@ module Spree::Fulfillment::Providers::Amazon
     attr_reader :package, :service
 
     def parsed_response_xml
-      client.get_fulfillment_preview(address, items)
-    end    
+      parsed_xml = client.get_fulfillment_preview(address, items)
+      amazon_logger.debug("FulfillmentPreview Response: #{parsed_xml.to_xml}", package.order)
+      parsed_xml
+    end
+    
+    def amazon_logger
+      @logger || AmazonLogger.new
+    end
 
     def address
       FbaUtils.amazon_address(package.order.ship_address)     
