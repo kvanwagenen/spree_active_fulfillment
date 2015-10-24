@@ -6,29 +6,12 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def fulfillment
-      AmazonFulfillment.new(
-        status: status,
-        fulfiller_id: fulfiller_id,
-        service: service,
-        earliest_arrival_time: earliest_arrival_time,
-        latest_arrival_time: latest_arrival_time,
-        time_received_by_fulfiller: time_received_by_fulfiller,
-        status_updated: status_updated,
-        fulfillment_data: fulfillment_data
-      )
+      updated_fulfillment(new_fulfillment)
     end
 
     def update_fulfillment(fulfillment)
-      fulfillment.update({
-        status: status,
-        fulfiller_id: fulfiller_id,
-        service: service,
-        earliest_arrival_time: earliest_arrival_time,
-        latest_arrival_time: latest_arrival_time,
-        time_received_by_fulfiller: time_received_by_fulfiller,
-        status_updated: status_updated,
-        fulfillment_data: fulfillment_data
-      })
+      fulfillment.update(fulfillment_attributes)
+      updated_fulfillment(fulfillment)
     end
 
     def cancelled?
@@ -36,6 +19,28 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     private
+    
+    def updated_fulfillment(fulfillment)
+      fulfillment.handle_status
+      fulfillment
+    end
+    
+    def new_fulfillment
+      AmazonFulfillment.new(fulfillment_attributes)
+    end
+    
+    def fulfillment_attributes
+      {
+        status: status,
+        fulfiller_id: fulfiller_id,
+        service: service,
+        earliest_arrival_time: earliest_arrival_time,
+        latest_arrival_time: latest_arrival_time,
+        time_received_by_fulfiller: time_received_by_fulfiller,
+        status_updated: status_updated,
+        fulfillment_data: fulfillment_data
+      }
+    end
 
     attr_reader :xml
 

@@ -1,12 +1,18 @@
 module Spree::Fulfillment::Providers::Amazon
   class AmazonFulfillment < Spree::Fulfillment
-    scope :refreshable, -> { where(status: ["received","planning","processing"]) }    
+    scope :refreshable, -> { joins(:shipment).where("spree_fulfillments.status in ('received','planning','processing') OR (spree_fulfillments.status = 'complete' AND spree_shipments.state in ('pending', 'ready'))") }    
 
-    def status=(new_status)
-      if new_status && (status != new_status || ["processing", "complete"].include?(new_status))
-        handle_status_change(new_status)
+    def handle_status
+      case status
+      when "processing"
+        processing
+      when "invalid", "unfulfillable"
+        cannot_fulfill
+      when "complete"
+        complete
+      when "complete_partialled"
+        complete_partialled
       end
-      super(new_status)
     end
 
     def refresh
@@ -35,19 +41,6 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     private
-
-    def handle_status_change(final_status)
-      case final_status
-      when "processing"
-        processing
-      when "invalid", "unfulfillable"
-        cannot_fulfill
-      when "complete"
-        complete
-      when "complete_partialled"
-        complete_partialled
-      end
-    end
 
     def processing
       if fulfillment_data && fulfillment_data[:shipments] && fulfillment_data[:shipments].select{ |shipment| shipment[:status] == "shipped"}.any?
@@ -88,8 +81,14 @@ module Spree::Fulfillment::Providers::Amazon
     end    
 
     def complete_partialled
+      capture_payments
+      ship_shipment
+      notify_customer_service
       # TODO Probably send an email to customer service so they can contact the customer
     end
-
+    
+    def notify_customer_service
+      
+    end
   end
 end
