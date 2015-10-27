@@ -31,6 +31,10 @@ module Spree::Fulfillment::Providers::Amazon
       if tracking_numbers
         shipment.tracking = tracking_numbers
         shipment.save
+        if order.respond_to?(:synced_at)
+          order.synced_at = nil
+          order.save
+        end
       end
     end
 
@@ -41,6 +45,10 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     private
+    
+    def order
+      shipment.order
+    end
 
     def processing
       if fulfillment_data && fulfillment_data[:shipments] && fulfillment_data[:shipments].select{ |shipment| shipment[:status] == "shipped"}.any?
