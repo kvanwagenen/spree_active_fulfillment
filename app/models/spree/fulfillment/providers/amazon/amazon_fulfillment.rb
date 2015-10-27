@@ -51,7 +51,7 @@ module Spree::Fulfillment::Providers::Amazon
 
     def capture_payments
       shipment.order.payments.each do |payment|
-        payment.capture! if !["invalid", "failed", "completed"].include?(payment.state)
+        payment.capture! if !["invalid", "failed", "completed", "void"].include?(payment.state)
       end
     end
 
