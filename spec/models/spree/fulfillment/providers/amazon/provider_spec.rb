@@ -6,7 +6,7 @@ module Spree::Fulfillment::Providers::Amazon
 
     context "#fulfill" do
       let(:shipment){ create(:shipment) }
-      let(:fulfillment){ build(:fulfillment) }
+      let(:fulfillment){ build(:amazon_fulfillment) }
 
       before(:each) do
         order_request = double()
@@ -17,12 +17,13 @@ module Spree::Fulfillment::Providers::Amazon
         allow(get_fulfillment_request).to receive(:fulfillment_order).and_return(fulfillment_order)
         allow(CreateFulfillmentOrderRequest).to receive(:new).and_return(order_request)       
         allow(GetFulfillmentOrderRequest).to receive(:new).and_return(get_fulfillment_request)
+        allow(fulfillment).to receive(:handle_status)
       end
 
       it 'adds a fulfillment to the shipment' do
         provider.fulfill(shipment, :standard)
         fulfillment = shipment.fulfillments.first
-        expect(fulfillment).to be_instance_of(Spree::Fulfillment)
+        expect(fulfillment).to be_instance_of(Spree::Fulfillment::Providers::Amazon::AmazonFulfillment)
         expect(fulfillment.id).not_to be_nil
         expect(fulfillment.fulfiller_id).to eq("an:id")
       end

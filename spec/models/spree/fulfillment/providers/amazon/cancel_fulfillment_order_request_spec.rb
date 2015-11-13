@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Spree::Fulfillment::Providers::Amazon
   describe CancelFulfillmentOrderRequest do
-    let(:fulfillment) { create(:fulfillment) }
+    let(:fulfillment) { create(:amazon_fulfillment) }
     let(:client) do
       instance_double("MWS::FulfillmentOutboundShipments::Client", cancel_fulfillment_order: nil)
     end

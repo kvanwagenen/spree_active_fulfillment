@@ -31,7 +31,9 @@ module Spree::Fulfillment::Providers::Amazon
       service ||= shipment_service(shipment)
       fulfillment_order_id = CreateFulfillmentOrderRequest.new(shipment, service).fulfillment_order_id
       fulfillment_order = GetFulfillmentOrderRequest.new(fulfillment_order_id).fulfillment_order
-      shipment.fulfillments << fulfillment_order.fulfillment
+      fulfillment = fulfillment_order.fulfillment
+      shipment.fulfillments << fulfillment
+      fulfillment.handle_status
     end
 
     def refresh_fulfillment(fulfillment)

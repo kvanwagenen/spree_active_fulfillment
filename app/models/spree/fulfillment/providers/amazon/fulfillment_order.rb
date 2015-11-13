@@ -6,7 +6,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def fulfillment
-      updated_fulfillment(new_fulfillment)
+      new_fulfillment
     end
 
     def update_fulfillment(fulfillment)
@@ -19,11 +19,6 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     private
-    
-    def updated_fulfillment(fulfillment)
-      fulfillment.handle_status
-      fulfillment
-    end
     
     def new_fulfillment
       AmazonFulfillment.new(fulfillment_attributes)
