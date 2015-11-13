@@ -14,7 +14,7 @@ module Spree
         raise NotImplementedError, "#package_estimate is not supported by #{self.class.name}."
       end
 
-      def estimate_delivery_window(package, service, ship_date)
+      def estimate_delivery_window(package, service, options)
         raise NotImplementedError, "#estimate_delivery_window is not supported by #{self.class.name}."
       end
 

@@ -17,7 +17,7 @@ module Spree::Fulfillment::Providers::Amazon
       fulfillment_preview(package, service).total_cost(service)
     end
 
-    def estimate_delivery_window(package, service, ship_date)
+    def estimate_delivery_window(package, service, options=nil)
       fulfillment_preview(package, service).delivery_window_estimate(service)
     end
 

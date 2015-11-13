@@ -8,7 +8,7 @@ module Spree::Calculator::Shipping::Amazon
     end
 
     def estimate_delivery_window(package, ship_date)
-      provider.estimate_delivery_window(package, service, ship_date)
+      provider.estimate_delivery_window(package, service)
     end
 
     def available?(package)
