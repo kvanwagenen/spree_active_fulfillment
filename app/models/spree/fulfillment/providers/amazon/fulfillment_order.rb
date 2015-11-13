@@ -11,7 +11,7 @@ module Spree::Fulfillment::Providers::Amazon
 
     def update_fulfillment(fulfillment)
       fulfillment.update(fulfillment_attributes)
-      updated_fulfillment(fulfillment)
+      fulfillment.handle_status
     end
 
     def cancelled?
