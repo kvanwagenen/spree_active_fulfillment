@@ -23,6 +23,10 @@ module Spree::Fulfillment::Providers::Amazon
       ["received", "planning"].include?(status)
     end
     
+    def cancelled?
+      status == "cancelled"
+    end
+    
     def tracking_numbers
       @tracking_numbers ||= packages.map{|package| package[:tracking_number]}.compact.join(", ")
     end

@@ -95,7 +95,7 @@
           <CurrencyCode>JPY</CurrencyCode>
         </ShippingChargeTax>
       </CODSettings>   
-      <FulfillmentOrderStatus>PROCESSING</FulfillmentOrderStatus>
+      <FulfillmentOrderStatus>CANCELLED</FulfillmentOrderStatus>
     </FulfillmentOrder>
     <FulfillmentShipment>
       <member>

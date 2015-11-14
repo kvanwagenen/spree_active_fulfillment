@@ -40,7 +40,7 @@ module Spree::Fulfillment::Providers::Amazon
       let(:fulfillment_order) do
         instance_double(FulfillmentOrder, cancelled?: true)
       end
-      let(:fulfillment){ build(:fulfillment) }
+      let(:fulfillment){ build(:cancellable_amazon_fulfillment) }
       before(:each) do
         class_double(CancelFulfillmentOrderRequest, new: cancel_fulfillment_order_request).as_stubbed_const
         class_double(GetFulfillmentOrderRequest, new: get_fulfillment_order_request).as_stubbed_const
@@ -57,28 +57,6 @@ module Spree::Fulfillment::Providers::Amazon
 
         it 'sends execute to request' do
           expect(cancel_fulfillment_order_request).to have_received(:execute)
-        end
-
-        it 'sends new to GetFulfillmentOrderRequest' do
-          expect(GetFulfillmentOrderRequest).to have_received(:new).with(fulfillment.fulfiller_id)
-        end
-
-        it 'sends fulfillment_order to request' do
-          expect(get_fulfillment_order_request).to have_received(:fulfillment_order)
-        end
-
-        it 'sends cancelled? to fulfillment_order' do
-          expect(fulfillment_order).to have_received(:cancelled?)
-        end
-      end
-
-      context 'with a failed cancellation' do
-        let(:fulfillment_order) do
-          double("fulfillment_order", cancelled?: false)
-        end
-
-        it 'raises FulfillmentCancellationError' do
-          expect{provider.cancel_fulfillment(fulfillment)}.to raise_error(FulfillmentCancellationError)
         end
       end
     end

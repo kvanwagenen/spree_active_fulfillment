@@ -42,10 +42,11 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def cancel_fulfillment(fulfillment)
-      CancelFulfillmentOrderRequest.new(fulfillment).execute
-      fulfillment_order = GetFulfillmentOrderRequest.new(fulfillment.fulfiller_id).fulfillment_order
-      if !fulfillment_order.cancelled?
-        raise FulfillmentCancellationError.new "Failed to cancel fulfillment with id #{fulfillment.id} and seller id #{fulfillment.fulfiller_id}"
+      if fulfillment.cancellable?
+        CancelFulfillmentOrderRequest.new(fulfillment).execute
+      else
+        fulfillment.refresh
+        true
       end
     end
 

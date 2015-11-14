@@ -15,7 +15,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def cancelled?
-      xml.css("CancelledQuantity").inject(0){|sum,n|sum + n.text.to_i} > 0
+      status == "cancelled"
     end
 
     private
