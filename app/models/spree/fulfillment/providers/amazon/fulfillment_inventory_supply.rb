@@ -15,7 +15,7 @@ module Spree::Fulfillment::Providers::Amazon
 
     def sku_level_from_inventory_supply_detail(detail)
       {
-        sku: FbaUtils.sku_from_seller_sku(detail.css("SellerSKU").text),
+        sku: detail.css("SellerSKU").text,
         on_hand: detail.css("InStockSupplyQuantity").text.to_i
       }
     end

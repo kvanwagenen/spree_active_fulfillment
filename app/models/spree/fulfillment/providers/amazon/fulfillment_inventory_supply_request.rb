@@ -24,7 +24,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def skus
-      variants.map{|v|FbaUtils.seller_sku(v.sku)}
+      variants.map{|v|[FbaUtils.seller_sku(v.sku), v.fulfiller_skus.map(&:value)]}.flatten.compact.uniq
     end
   end
 end

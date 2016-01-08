@@ -25,7 +25,7 @@ module Spree::Fulfillment::Providers::Amazon
 
     def sku_level(row)
       {
-        sku: FbaUtils.sku_from_seller_sku(row['seller-sku']),
+        sku: row['seller-sku'],
         on_hand: row['Quantity Available'].to_i
       }
     end
