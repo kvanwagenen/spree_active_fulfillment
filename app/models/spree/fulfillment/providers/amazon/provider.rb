@@ -22,8 +22,16 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def update_inventory_levels(variants=nil)
-      inventory_report(variants).sku_levels.each do |sku_level|
-        update_sku_on_hand(sku_level)
+      sku_levels = inventory_report(variants).sku_levels
+      variants_updated = []
+      sku_levels.each_slice(100) do |sku_level|
+        variants = Spree::Variant.includes(:fulfiller_skus).references(:fulfiller_skus).where(fulfiller_skus: {value: sku_levels.map{|sl| sl[:sku]}).where.not(id: variants_updated).distinct
+        variants.each do |variant|
+          variant_skus = variant.fulfiller_skus.map(&:value) << variant.sku
+          on_hand = sku_levels.select{|level|variant_skus.include?(level[:sku])}.inject(0){|sum, level| sum + level[:on_hand]}
+          variant.stock_items.find_by_stock_location(amazon_stock_location).try(:set_count_on_hand, on_hand)
+        end
+        variants_updated = variants_updated | variants.map(&:id)
       end
     end
 
@@ -67,10 +75,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def update_sku_on_hand(sku_level)
-      stock_item = amazon_stock_location.stock_items.find_by_variant_sku(sku_level[:sku])
-      if stock_item && stock_item.count_on_hand != sku_level[:on_hand]
-        stock_item.set_count_on_hand(sku_level[:on_hand])
-      end
+      
     end
 
     def amazon_stock_location

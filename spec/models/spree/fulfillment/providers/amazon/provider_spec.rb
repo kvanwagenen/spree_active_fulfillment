@@ -60,5 +60,24 @@ module Spree::Fulfillment::Providers::Amazon
         end
       end
     end
+    
+    context '#update_inventory_levels' do
+      let(:variants){create_list(:variant, 5)}
+      before do
+        variants.first.fulfiller_skus.create(value: "FSKU1")
+        variants.first.fulfiller_skus.create(value: "FSKU2")
+        variants.second.fulfiller_skus.create(value: "FSKU3")
+        sku_levels = [
+            
+        ]
+        # report = double("Spree::Fulfillment::Providers::Amazon::FulfillmentInventorySupply", sku_levels: sku_levels)
+        # request = instance_double("Spree::Fulfillment::Providers::Amazon::FulfillmentInventorySupplyRequest", report: report)
+        # class_double("Spree::Fulfillment::Providers::Amazon::FulfillmentInventorySupplyRequest").as_stubbed_const(new: )
+      end
+      it 'includes all of a variants fulfiller skus in the update request' do
+        # provider.update_inventory_levels(variants)
+        # expect()
+      end
+    end
   end
 end
