@@ -76,12 +76,16 @@ module Spree::Fulfillment::Providers::Amazon
     end
 
     def items
-      shipment.sku_counts.map{|sku_count| create_fulfillment_order_item(sku_count)}
+      fulfiller_sku_counts.map{|sku_count| create_fulfillment_order_item(sku_count)}
+    end
+    
+    def fulfiller_sku_counts
+      FulfillmentSkuCountBuilder.new(shipment).fulfiller_sku_counts
     end
 
     def create_fulfillment_order_item(sku_count)
       {
-        'SellerSKU' => FbaUtils.seller_sku(sku_count[:sku]),
+        'SellerSKU' => sku_count[:sku],
         'SellerFulfillmentOrderItemId' => "#{shipment.number}:#{sku_count[:sku]}:Q#{sku_count[:count]}",
         'Quantity' => sku_count[:count]
       }
