@@ -1,5 +1,9 @@
 require 'spec_helper'
 
+RSpec::Matchers.define :hash_with_array_including do |hash_key, expected_values|
+  match {|actual|array = actual[hash_key];array.select{|v|!expected_values.include?(v)}.empty? && expected_values.select{|v|!array.include?(v)}.empty?}
+end
+
 module Spree::Fulfillment::Providers::Amazon
   describe FulfillmentInventorySupplyRequest do
 
@@ -10,10 +14,9 @@ module Spree::Fulfillment::Providers::Amazon
       client
     end
     
-    let(:variants){[MockVariant.new("SampleSKU1"), MockVariant.new("SampleSKU2")]}
+    let(:variants){create_list(:variant_with_fulfiller_skus, 2)}
 
     let(:request) do
-      MockVariant = Struct.new(:sku)
       request = FulfillmentInventorySupplyRequest.new(variants)
       allow(request).to receive(:client).and_return(client)
       request
@@ -35,7 +38,7 @@ module Spree::Fulfillment::Providers::Amazon
         
         it 'includes fulfiller skus in the request' do
           expected_skus = variants.map{|v|[v.default_fulfiller_sku, v.fulfiller_skus.map(&:value)]}.flatten
-          expect(client).to receive(:list_inventory_supply).with(hash_including(seller_skus: expected_skus))
+          expect(client).to receive(:list_inventory_supply).with(hash_with_array_including(:seller_skus, expected_skus))
           request.report
         end
       end

@@ -6,11 +6,11 @@ module Spree::Fulfillment::Providers::Amazon
     end
     
     def fulfiller_sku_counts
-      fulfiller_sku_counts = {}
+      counts = {}
       variants.each do |variant|
-        add_fulfiller_sku_counts_for_variant(variant, fulfiller_sku_counts)
+        add_fulfiller_sku_counts_for_variant(variant, counts)
       end
-      fulfiller_sku_counts
+      counts
     end
     
     private
@@ -21,9 +21,9 @@ module Spree::Fulfillment::Providers::Amazon
       required = sku_count_for_variant(variant)[:count]
       allocated = 0
       prioritized_variant_fulfiller_sku_levels(variant).each do |sku_level|
-        to_allocate = [sku_level[:on_hand], required - allocated].min
-        fulfiller_sku_counts[sku_level[:sku]] = to_allocate
-        allocated += to_allocate
+        allocating = [sku_level[:on_hand], required - allocated].min
+        fulfiller_sku_counts[sku_level[:sku]] = allocating
+        allocated += allocating
         break if allocated == required
       end
     end

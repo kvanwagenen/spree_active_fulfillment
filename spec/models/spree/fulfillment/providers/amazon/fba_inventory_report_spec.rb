@@ -12,7 +12,7 @@ module Spree::Fulfillment::Providers::Amazon
         sku_levels = report.sku_levels
         expect(sku_levels).to be_kind_of(Array)
         expect(sku_levels.length).to eq(9)
-        expect(sku_levels[0][:sku]).to eq("00115-S")
+        expect(sku_levels[0][:sku]).to eq("FBA.00115-S")
         expect(sku_levels[0][:on_hand]).to eq(31)
       end
     end
