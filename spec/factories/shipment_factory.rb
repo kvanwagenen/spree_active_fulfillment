@@ -8,10 +8,11 @@ FactoryGirl.define do
     transient do
       fulfiller_skus_per_variant 1
       variant_count 1
+      line_items_quantity 1
     end
     
     after(:create) do |shipment, evaluator|
-      shipment.order = create(:order_with_line_items, line_items_count: evaluator.variant_count)
+      shipment.order = create(:order_with_line_items_quantity, line_items_count: evaluator.variant_count, line_items_quantity: evaluator.line_items_quantity)
       shipment.add_shipping_method(create(:shipping_method), true)
       shipment.order.line_items.each do |line_item|
         line_item.variant = create(:variant_with_fulfiller_skus, sku_count: evaluator.fulfiller_skus_per_variant)

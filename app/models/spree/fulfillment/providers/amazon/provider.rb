@@ -74,10 +74,6 @@ module Spree::Fulfillment::Providers::Amazon
       Spree::FulfillmentConfig
     end
 
-    def update_sku_on_hand(sku_level)
-      
-    end
-
     def amazon_stock_location
       Spree::StockLocation.find(fulfillment_config.preferred_amazon_stock_location_id)
     end
