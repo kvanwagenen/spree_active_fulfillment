@@ -1,16 +1,20 @@
 FactoryGirl.define do
-  factory :shipment_with_fulfiller_skus, class: Spree::Shipment do
+  factory :shipment_with_variants_with_fulfiller_skus, class: Spree::Shipment do
     tracking 'U10000'
     cost 100.00
     state 'pending'
-    order
     stock_location
     
-    after(:create) do |shipment, evalulator|
+    transient do
+      fulfiller_skus_per_variant 1
+      variant_count 1
+    end
+    
+    after(:create) do |shipment, evaluator|
+      shipment.order = create(:order_with_line_items, line_items_count: evaluator.variant_count)
       shipment.add_shipping_method(create(:shipping_method), true)
-
       shipment.order.line_items.each do |line_item|
-        line_item.variant = create(:variant_with_fulfiller_skus)
+        line_item.variant = create(:variant_with_fulfiller_skus, sku_count: evaluator.fulfiller_skus_per_variant)
         line_item.quantity.times do
           shipment.inventory_units.create(
             order_id: shipment.order_id,

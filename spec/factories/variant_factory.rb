@@ -4,7 +4,9 @@ FactoryGirl.define do
       sku_count 3
     end
     after(:create) do |variant, evaluator|
-      create_list(:fulfiller_sku, evaluator.sku_count, variant: variant)
+      if evaluator.sku_count > 1
+        create_list(:fulfiller_sku, evaluator.sku_count - 1, variant: variant)
+      end
     end
   end
 end

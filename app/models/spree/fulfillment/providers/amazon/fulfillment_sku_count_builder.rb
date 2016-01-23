@@ -6,6 +6,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
     
     def fulfiller_sku_counts
+      binding.pry
       counts = {}
       variants.each do |variant|
         add_fulfiller_sku_counts_for_variant(variant, counts)
@@ -37,6 +38,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
     
     def variant_fulfiller_sku_levels(variant)
+      binding.pry
       fulfiller_sku_levels.select{|sku_level|variant.fulfiller_skus.map(&:value).include?(sku_level[:sku])}
     end
     
