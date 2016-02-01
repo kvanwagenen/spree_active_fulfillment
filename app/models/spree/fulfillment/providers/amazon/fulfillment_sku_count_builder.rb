@@ -27,7 +27,7 @@ module Spree::Fulfillment::Providers::Amazon
         break if allocated == required
       end
       if allocated < required
-        logger.warn("Fulfillment Warning: InventoryNotAvailable Order: #{shipment.order.number}, Variant: #{variant.sku}")
+        logger.warn("Fulfillment Warning: InventoryNotAvailable Order: #{shipment.try(:order).try(:number)}, Variant: #{variant.sku}")
         raise InventoryNotAvailable
       end
     end
