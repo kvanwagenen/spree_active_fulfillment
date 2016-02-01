@@ -1,10 +1,9 @@
 module Spree::Fulfillment::Providers::Amazon
   class FulfillmentPreviewRequest < PeddlerRequest
 
-    def initialize(package, service, provider)
+    def initialize(package, service)
       @package = package
       @service = service
-      @provider = provider
     end
 
     def preview
@@ -19,7 +18,7 @@ module Spree::Fulfillment::Providers::Amazon
 
     private
 
-    attr_reader :package, :service, :provider
+    attr_reader :package, :service
 
     def parsed_response_xml
       parsed_xml = client.get_fulfillment_preview(address, items)
@@ -46,7 +45,7 @@ module Spree::Fulfillment::Providers::Amazon
     end
     
     def fulfiller_sku_counts
-      @fulfiller_sku_counts ||= FulfillmentSkuCountBuilder.new(package.to_shipment, provider).fulfiller_sku_counts
+      @fulfiller_sku_counts ||= FulfillmentSkuCountBuilder.new(package.to_shipment).fulfiller_sku_counts
     end
 
   end
