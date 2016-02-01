@@ -1,18 +1,19 @@
 module Spree::Fulfillment::Providers::Amazon
   class FulfillmentPreviewCache
 
-    def initialize
+    def initialize(provider)
+      @provider = provider
       @previews = {}
     end
 
     def get(package, service)
       key = preview_key(package, service)
-      previews[key] ||= FulfillmentPreviewRequest.new(package, service).preview
+      previews[key] ||= FulfillmentPreviewRequest.new(package, service, provider).preview
     end
 
     private
 
-    attr_accessor :previews
+    attr_accessor :previews, :provider
 
     def preview_key(package, service)
       "#{zip(package)}:#{contents(package)}:#{service.to_s}"

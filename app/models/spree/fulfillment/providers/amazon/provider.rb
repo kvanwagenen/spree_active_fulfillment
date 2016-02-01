@@ -2,7 +2,7 @@ module Spree::Fulfillment::Providers::Amazon
   class Provider < Spree::Fulfillment::Provider
 
     def initialize
-      @fulfillment_preview_cache = FulfillmentPreviewCache.new
+      @fulfillment_preview_cache = FulfillmentPreviewCache.new(self)
     end
     
     def services

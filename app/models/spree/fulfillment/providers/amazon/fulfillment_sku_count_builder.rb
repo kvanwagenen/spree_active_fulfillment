@@ -1,8 +1,9 @@
 module Spree::Fulfillment::Providers::Amazon
   class FulfillmentSkuCountBuilder
   
-    def initialize(shipment)
+    def initialize(shipment, provider)
       @shipment = shipment
+      @provider = provider
     end
     
     def fulfiller_sku_counts
@@ -15,7 +16,7 @@ module Spree::Fulfillment::Providers::Amazon
     
     private
     
-    attr_reader :shipment
+    attr_reader :shipment, :provider
     
     def add_fulfiller_sku_counts_for_variant(variant, fulfiller_sku_counts)
       required = sku_count_for_variant(variant)[:count]
@@ -27,6 +28,7 @@ module Spree::Fulfillment::Providers::Amazon
         break if allocated == required
       end
       if allocated < required
+        provider.update_inventory_levels(variants)
         logger.warn("Fulfillment Warning: InventoryNotAvailable Order: #{shipment.try(:order).try(:number)}, Variant: #{variant.sku}")
         raise InventoryNotAvailable
       end
