@@ -13,6 +13,10 @@ module Spree
     def cancellable?
       raise NotImplementedError, "#cancellable? has not been implemented by #{self.class.name}"
     end
+    
+    def finalized?
+      raise NotImplementedError, "#cancellable? has not been implemented by #{self.class.name}"
+    end
 
     protected
 

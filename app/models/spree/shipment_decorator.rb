@@ -15,8 +15,24 @@ Spree::Shipment.class_eval do
     end
   end
   
+  def fulfillable?
+    ['ready','pending'].include?(state) && fulfillment_provider && fulfillments.select{|f|f.cancellable?}.empty? && selected_shipping_rate
+  end
+  
+  def fulfilled?
+    fulfillment_cancellable? || fulfillments.select{|f|f.finalized?}.any?
+  end
+  
+  def fulfillment_cancellable?
+    fulfillments.select{|f|f.cancellable?}.any?
+  end
+  
   def fulfill!
     fulfillment_provider.fulfill(self, fulfillment_service)
+  end
+  
+  def cancel_fulfillments
+    fulfillments.select{|f|f.cancellable?}.each(&:cancel!)
   end
 
   alias_method :orig_after_cancel, :after_cancel

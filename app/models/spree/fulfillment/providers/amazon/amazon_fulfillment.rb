@@ -14,6 +14,12 @@ module Spree::Fulfillment::Providers::Amazon
         complete_partialled
       end
     end
+    
+    def cancel!
+      provider.cancel_fulfillment(self)
+      sleep(2.5)
+      refresh
+    end
 
     def refresh
       provider.refresh_fulfillment(self)
@@ -25,6 +31,10 @@ module Spree::Fulfillment::Providers::Amazon
     
     def cancelled?
       status == "cancelled"
+    end
+    
+    def finalized?
+      ["complete","complete_partialled","cancelled"].include?(status)
     end
     
     def tracking_numbers
