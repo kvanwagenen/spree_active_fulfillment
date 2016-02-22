@@ -16,7 +16,7 @@ Spree::Shipment.class_eval do
   end
   
   def fulfillable?
-    ['ready','pending'].include?(state) && fulfillment_provider && fulfillments.select{|f|f.cancellable?}.empty? && selected_shipping_rate
+    ['ready','pending'].include?(state) && fulfillment_provider && fulfillments.select{|f|f.cancellable?}.empty? && selected_shipping_rate && order.ship_address
   end
   
   def fulfilled?
@@ -28,6 +28,10 @@ Spree::Shipment.class_eval do
   end
   
   def fulfill!
+    if !address && order && order.ship_address
+      self.address = order.ship_address
+      self.save
+    end
     fulfillment_provider.fulfill(self, fulfillment_service)
   end
   
