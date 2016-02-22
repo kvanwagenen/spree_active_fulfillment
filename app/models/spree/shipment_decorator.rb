@@ -37,7 +37,7 @@ Spree::Shipment.class_eval do
       self.save
     end
     fulfillment_provider.fulfill(self, fulfillment_service)
-    sleep(2)
+    sleep(3)
   end
   
   def cancel_fulfillments

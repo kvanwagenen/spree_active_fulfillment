@@ -17,7 +17,7 @@ module Spree::Fulfillment::Providers::Amazon
     
     def cancel!
       provider.cancel_fulfillment(self)
-      sleep(2.5)
+      sleep(4)
       refresh
     end
 
