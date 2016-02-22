@@ -24,6 +24,10 @@ module Spree::Fulfillment::Providers::Amazon
     def refresh
       provider.refresh_fulfillment(self)
     end
+    
+    def refreshable?
+      ["received", "planning", "processing"].include?(status)
+    end
 
     def cancellable?
       ["received", "planning"].include?(status)
@@ -33,8 +37,12 @@ module Spree::Fulfillment::Providers::Amazon
       status == "cancelled"
     end
     
+    def processing?
+      status == "processing"
+    end
+    
     def finalized?
-      ["complete","complete_partialled","cancelled"].include?(status)
+      ["complete","complete_partialled"].include?(status)
     end
     
     def tracking_numbers

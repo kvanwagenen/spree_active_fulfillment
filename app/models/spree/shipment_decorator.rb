@@ -20,11 +20,15 @@ Spree::Shipment.class_eval do
   end
   
   def fulfilled?
-    fulfillment_cancellable? || fulfillments.select{|f|f.finalized?}.any?
+    fulfillments.select{|f|f.finalized? || f.processing? || f.cancellable?}.any?
   end
   
   def fulfillment_cancellable?
     fulfillments.select{|f|f.cancellable?}.any?
+  end
+  
+  def fulfillment_cancelled?
+    fulfillments.length > 0 && fulfillments.select{|f|!f.cancelled?}.empty?
   end
   
   def fulfill!
